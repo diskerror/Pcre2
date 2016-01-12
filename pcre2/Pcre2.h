@@ -35,13 +35,11 @@ public:
 class Exception : public std::exception
 {
 	int32_t			_err;
-	unsigned char*	_message;
 
 public:
 		Exception(int32_t err);
-		virtual ~Exception();
 	
-	const unsigned char* what();
+	const char* what() const noexcept override;
 };
 
 }

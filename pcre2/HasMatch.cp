@@ -18,18 +18,12 @@ void HasMatch::__construct(Php::Parameters& p)
 //	also used for "exec"
 Php::Value HasMatch::__invoke(Php::Parameters& p) const
 {
-	if ( p.size() < 1 )
-		throw Php::Exception( "First parameter to HasMatch::exec must be set." );
-	
-	const char* subject = (const char *) p[0];
-	int32_t offset = ( p.size() > 1 ) ? (int32_t) p[1] : 0;
-	
 	//	do match
 	int32_t matchCount = pcre2_match(
 		this->_regex,
-		(const PCRE2_UCHAR*) subject,
+		(const PCRE2_UCHAR*) (const char *) p[0].buffer(),	//	subject,
 		PCRE2_ZERO_TERMINATED,
-		offset,
+		(( p.size() > 1 && (int32_t) p[1] > 0) ? (int32_t) p[1] : 0),	//	offset,
 		0,	//	options
 		this->_match_data,
 		NULL

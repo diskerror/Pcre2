@@ -17,19 +17,15 @@ void Match::__construct(Php::Parameters& p)
 //	also used for "exec"
 Php::Value Match::__invoke(Php::Parameters& p) const
 {
-	if ( p.size() < 1 )
-		throw Php::Exception( "First parameter to Match::exec (or MatchAll::exec) must be set." );
-	
 	const char* subject = (const char *) p[0];
-	Php::Array* matches = (Php::Array*) &p[1];
-	int32_t offset = ( p.size() > 2 ) ? (int32_t) p[2] : 0;
+// 	Php::Value* matches = (Php::Value*) &p[1];
 	
 	//	do match
 	int32_t matchCount = pcre2_match(
 		this->_regex,
 		(const PCRE2_UCHAR*) subject,
 		PCRE2_ZERO_TERMINATED,
-		offset,
+		(( p.size() > 2 && (int32_t) p[2] > 0) ? (int32_t) p[2] : 0),	//	offset,
 		0,	//	options
 		this->_match_data,
 		NULL
@@ -39,27 +35,22 @@ Php::Value Match::__invoke(Php::Parameters& p) const
 		throw new Exception( matchCount );
 	}
 	
-	while ( (*matches)[0].exists() ) {
-		(*matches)[0].unset();
-	}
-	
 	if ( matchCount == PCRE2_ERROR_NOMATCH ) {
 		return false;
 	}
 	
-	this->getMatches(matchCount, subject, matches);
+	//	Match first.
+	if ( 1 ) {
+		PCRE2_SIZE* ovector = pcre2_get_ovector_pointer(this->_match_data);
+		PCRE2_SIZE i;
+		for (i = 0; i < (PCRE2_SIZE) matchCount; i++) {
+	 		p[1][i] = Php::Value( (char*)(subject + ovector[2*i]), (ovector[2*i+1] - ovector[2*i]) );
+		}
+	}
+	//	Match all.
+// 	else {
+// 	}
 	
 	return true;
 }
-
-void Match::getMatches(int32_t matchCount, const char* subject, Php::Array* matches) const
-{
-	std::vector<std::string> vMatch;
-	PCRE2_SIZE* ovector = pcre2_get_ovector_pointer(this->_match_data);
-	PCRE2_SIZE i;
-	for (i = 0; i < (PCRE2_SIZE) matchCount; i++) {
-		vMatch.emplace_back( (subject + ovector[2*i]), (ovector[2*i+1] - ovector[2*i]) );
-	}
-	
-	*matches = (Php::Array) vMatch;
-}
+ 

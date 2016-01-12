@@ -1,8 +1,7 @@
 
-#include "Replace.h"
-#include "HasMatch.h"
-#include "Match.h"
-#include "MatchAll.h"
+#include "Pcre2/Replace.h"
+#include "Pcre2/HasMatch.h"
+#include "Pcre2/Match.h"
 
 using namespace std;
 
@@ -46,7 +45,7 @@ PHPCPP_EXPORT void *get_module()
 		Php::ByVal("expression", Php::Type::String, true),
 		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
 	});
-
+	
 	hasMatch.method("exec", &Pcre2::HasMatch::__invoke, {
 		Php::ByRef("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
@@ -61,7 +60,13 @@ PHPCPP_EXPORT void *get_module()
 		Php::ByVal("expression", Php::Type::String, true),
 		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
 	});
-
+	
+	match.method("__invoke", &Pcre2::Match::__invoke, {
+		Php::ByRef("subject", Php::Type::String, true),
+		Php::ByRef("matches", Php::Type::Array, true),
+		Php::ByVal("offset", Php::Type::Numeric, false)
+	});
+	
 	match.method("exec", &Pcre2::Match::__invoke, {
 		Php::ByRef("subject", Php::Type::String, true),
 		Php::ByRef("matches", Php::Type::Array, true),
@@ -69,22 +74,6 @@ PHPCPP_EXPORT void *get_module()
 	});
 	
 	extension.add(std::move(match));
-	
-	////////////////////////////////////////////////////////////////////////////
-// 	Php::Class<Pcre2::MatchAll> matchAll("Diskerror\\Pcre2\\MatchAll");
-// 	
-// 	matchAll.method("__construct", &Pcre2::MatchAll::__construct, {
-// 		Php::ByVal("expression", Php::Type::String, true),
-// 		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
-// 	});
-// 
-// 	matchAll.method("exec", &Pcre2::MatchAll::exec, {
-// 		Php::ByRef("subject", Php::Type::String, true),
-// 		Php::ByRef("matches", Php::Type::Array, true),
-// 		Php::ByVal("offset", Php::Type::Numeric, false)
-// 	});
-// 	
-// 	extension.add(std::move(matchAll));
 	
 	// return the extension
 	return extension;

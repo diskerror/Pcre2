@@ -40,25 +40,16 @@ Pcre2::Pcre2::~Pcre2()
 Pcre2::Exception::Exception(int32_t err)
 {
 	this->_err = err;
-	this->_message = NULL;
 }
 
-Pcre2::Exception::~Exception()
+const char* Pcre2::Exception::what() const noexcept
 {
-	if ( this->_message != NULL )
-		delete this->_message;
-}
+	uint32_t messgLen = 2048;
+	char* message = new char(messgLen);
+	pcre2_get_error_message(this->_err, (PCRE2_UCHAR8*) message, messgLen);
+
+	strcat( (char*) message, "\n" );
+	strcat( (char*) message, std::exception::what() );
 	
-const unsigned char* Pcre2::Exception::what()
-{
-	if ( this->_message == NULL ) {
-		uint32_t messgLen = 2048;
-		this->_message = new unsigned char(messgLen);
-		pcre2_get_error_message(this->_err, (PCRE2_UCHAR8*) this->_message, messgLen);
-	
-		strcat( (char*) this->_message, "\n" );
-		strcat( (char*) this->_message, std::exception::what() );
-	}
-	
-	return (const unsigned char*) this->_message;
+	return (const char*) message;
 }

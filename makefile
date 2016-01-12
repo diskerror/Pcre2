@@ -1,4 +1,3 @@
-
 NAME			= diskerror_pcre2
 
 PHPE			= /etc/php5
@@ -7,9 +6,9 @@ EXTENSION_DIR	= $(shell php-config --extension-dir)
 EXTENSION 		= $(NAME).so
 INI 			= $(NAME).ini
 
-COMPILER		= g++
-LINKER			= g++
-COMPILER_FLAGS	= -Wall -c -O2 -std=c++11 -fpic -I/usr/local/include
+COMPILER		= clang
+LINKER			= clang
+COMPILER_FLAGS	= -Wall -c -Ofast -std=c++11 -fpic -I/usr/local/include
 LINKER_FLAGS	= -shared
 
 LDLIBS = \
@@ -18,47 +17,42 @@ LDLIBS = \
 	-Wl,-rpath,/usr/local/lib \
 	-lpcre2-8
 
-CPP	= $(COMPILER) $(COMPILER_FLAGS) -include "precompile.hpp" $<
+CPP	= $(COMPILER) $(COMPILER_FLAGS) -include "precompile.hpp" $< -o $@
 
 OBJECTS = \
-	Pcre2.o \
-	Replace.o \
-	HasMatch.o \
-	Match.o \
-	MatchAll.o \
-	main.o
+	obj/Pcre2.o \
+	obj/Replace.o \
+	obj/HasMatch.o \
+	obj/Match.o \
+	obj/main.o
 
 
 all: $(EXTENSION)
 
 pre: cleanpre \
-	precompile.o
+	obj/precompile.o
 
-$(EXTENSION): $(OBJECTS) precompile.o
+$(EXTENSION): obj/precompile.o $(OBJECTS)
 	$(LINKER) $(OBJECTS) $(LINKER_FLAGS) $(LDLIBS) -o $@
 
-precompile.o: precompile.hpp
+obj/precompile.o: precompile.hpp
+	mkdir -p obj
 	$(COMPILER) $(COMPILER_FLAGS) $< -o $@
 
-
-Pcre2.o: Pcre2.cp Pcre2.h
+obj/Pcre2.o: Pcre2/Pcre2.cp Pcre2/Pcre2.h
 	$(CPP)
 
-Replace.o: Replace.cp Replace.h
+obj/Replace.o: Pcre2/Replace.cp Pcre2/Replace.h
 	$(CPP)
 
-HasMatch.o: HasMatch.cp HasMatch.h
+obj/HasMatch.o: Pcre2/HasMatch.cp Pcre2/HasMatch.h
 	$(CPP)
 
-Match.o: Match.cp Match.h Pcre2.h
+obj/Match.o: Pcre2/Match.cp Pcre2/Match.h
 	$(CPP)
 
-MatchAll.o: MatchAll.cp MatchAll.h
+obj/main.o: main.cp Pcre2/Replace.h Pcre2/HasMatch.h Pcre2/Match.h
 	$(CPP)
-
-main.o: main.cp Replace.h HasMatch.h Match.h MatchAll.h
-	$(CPP)
-
 
 
 install: $(EXTENSION)
@@ -83,9 +77,9 @@ uninstall:
 		$(PHPE)/cli/conf.d/$(INI) \
 		$(PHPE)/cgi/conf.d/$(INI)
 
-				
+
 clean:
 	rm -f $(EXTENSION) $(OBJECTS)
 
 cleanpre:
-	rm -f precompile.o
+	rm -rf obj

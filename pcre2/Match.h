@@ -10,7 +10,7 @@ namespace Pcre2 {
 class Match : public Pcre2
 {
 protected:
-	void	getMatches(int32_t, const char*, Php::Array*) const;
+// 	void	getMatches(int32_t, const char*, Php::Value&) const;
 	
 public:
 		Match() : Pcre2() {};
