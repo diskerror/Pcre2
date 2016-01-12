@@ -12,8 +12,7 @@ void Replace::__construct(Php::Parameters& p)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//	also used for "exec"
-Php::Value Replace::__invoke(Php::Parameters& p) const
+Php::Value Replace::exec(Php::Parameters& p) const
 {
 	uint32_t subjectLen = p[0].size();
 	PCRE2_SIZE bufferSize = ( subjectLen < 2048 ) ? 4096 : (subjectLen*1.3);

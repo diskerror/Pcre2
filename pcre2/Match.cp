@@ -14,8 +14,7 @@ void Match::__construct(Php::Parameters& p)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//	also used for "exec"
-Php::Value Match::__invoke(Php::Parameters& p) const
+Php::Value Match::exec(Php::Parameters& p) const
 {
 	const char* subject = (const char *) p[0];
 // 	Php::Value* matches = (Php::Value*) &p[1];

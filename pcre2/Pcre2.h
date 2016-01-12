@@ -3,11 +3,6 @@
 #define DISKERROR_PCRE2_H
 #pragma once
 
-#include <phpcpp.h>
-
-#define PCRE2_CODE_UNIT_WIDTH 8
-#include <pcre2.h>
-
 
 namespace Pcre2 {
 
@@ -27,7 +22,7 @@ public:
 		
 	virtual void	__construct(Php::Parameters&) = 0;
 	
-	virtual Php::Value	__invoke(Php::Parameters&) const = 0;
+	virtual Php::Value	exec(Php::Parameters&) const = 0;
 
 };
 
@@ -42,6 +37,6 @@ public:
 	const char* what() const noexcept override;
 };
 
-}
+}	//	namespace Pcre2
 
 #endif	//	DISKERROR_PCRE2_H
