@@ -17,11 +17,10 @@ public:
 		
 	virtual void	__construct(Php::Parameters&);
 	
-	//	also used for "exec"
-	virtual Php::Value	__invoke(Php::Parameters&) const;
+	virtual Php::Value	exec(Php::Parameters&) const;
 	
 };
 
-}
+}	//	namespace Pcre2
 
 #endif	//	DISKERROR_PCREMATCH_H

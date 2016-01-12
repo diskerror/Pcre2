@@ -31,7 +31,7 @@ PHPCPP_EXPORT void *get_module()
 	});
 	
 	//	the PHP "exec" method also calls the C++ __invoke
-	replace.method("exec", &Pcre2::Replace::__invoke, {
+	replace.method("exec", &Pcre2::Replace::exec, {
 		Php::ByRef("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
@@ -46,7 +46,7 @@ PHPCPP_EXPORT void *get_module()
 		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
 	});
 	
-	hasMatch.method("exec", &Pcre2::HasMatch::__invoke, {
+	hasMatch.method("exec", &Pcre2::HasMatch::exec, {
 		Php::ByRef("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
@@ -61,13 +61,7 @@ PHPCPP_EXPORT void *get_module()
 		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
 	});
 	
-	match.method("__invoke", &Pcre2::Match::__invoke, {
-		Php::ByRef("subject", Php::Type::String, true),
-		Php::ByRef("matches", Php::Type::Array, true),
-		Php::ByVal("offset", Php::Type::Numeric, false)
-	});
-	
-	match.method("exec", &Pcre2::Match::__invoke, {
+	match.method("exec", &Pcre2::Match::exec, {
 		Php::ByRef("subject", Php::Type::String, true),
 		Php::ByRef("matches", Php::Type::Array, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)

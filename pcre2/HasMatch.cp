@@ -15,8 +15,7 @@ void HasMatch::__construct(Php::Parameters& p)
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-//	also used for "exec"
-Php::Value HasMatch::__invoke(Php::Parameters& p) const
+Php::Value HasMatch::exec(Php::Parameters& p) const
 {
 	//	do match
 	int32_t matchCount = pcre2_match(
