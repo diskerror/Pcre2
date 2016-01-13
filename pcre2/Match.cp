@@ -43,6 +43,7 @@ Php::Value Match::exec(Php::Parameters& p) const
 		PCRE2_SIZE* ovector = pcre2_get_ovector_pointer(this->_match_data);
 		PCRE2_SIZE i;
 		for (i = 0; i < (PCRE2_SIZE) matchCount; i++) {
+			//	p[1] is an array set by signature in main
 	 		p[1][i] = Php::Value( (char*)(subject + ovector[2*i]), (ovector[2*i+1] - ovector[2*i]) );
 		}
 	}

@@ -74,4 +74,4 @@ PHPCPP_EXPORT void *get_module()
 }
 
 
-}
+}	//	extern "C"
