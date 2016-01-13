@@ -8,12 +8,26 @@ In PHP, the PCRE function:
 ```
 $subject = 'abacadabra';
 $result = pcre_replace('/a/', ' ', $subject); //  ' b c d br '
+
+$result = pcre_match('/a/', $subject);  //  true
+
+$matches = [];
+$result = pcre_match('/a/', $subject, $matches);  //  true
+print_r($matches);  //  ['a', 'a']
 ```
 Is equivalent to:
 ```
 $subject = 'abacadabra';
 $replace = \Diskerror\Pcre2\Replace('a', ' ');
 $result = $replace->exec($subject);  //  ' b c d br '
+
+$hasMatch = \Diskerror\Pcre2\HasMatch('a');
+$result = $hasMatch->exec($subject);  //  true
+
+$matches = [];
+$match = \Diskerror\Pcre2\Match('a');
+$result = $match->exec($subject, $matches);
+print_r($matches);  //  ['a', 'a']
 ```
 This will perform replacements on multiple strings with only one compile step, and without needing them to be gathered into a single array.
 
@@ -27,4 +41,4 @@ sudo make install
 ```
 
 ##PHP-CPP
-The [Copernica](http://www.copernica.com) PHP-CPP C++ library is used to build this extension. It might help to use [my version](https://github.com/diskerror/PHP-CPP) as it fixes some problems with the install step.
+The [Copernica](http://www.copernica.com) PHP-CPP C++ library is used to build this extension. It might help to use [my branch](https://github.com/diskerror/PHP-CPP) as it fixes some problems with the install step.
