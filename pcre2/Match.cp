@@ -31,7 +31,7 @@ Php::Value Match::exec(Php::Parameters& p) const
 	);
 	
 	if ( matchCount < PCRE2_ERROR_NOMATCH ) {
-		throw new Exception( matchCount );
+		throw Exception( matchCount );
 	}
 	
 	if ( matchCount == PCRE2_ERROR_NOMATCH ) {

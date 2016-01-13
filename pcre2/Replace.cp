@@ -33,7 +33,7 @@ Php::Value Replace::exec(Php::Parameters& p) const
 	);
 	
 	if ( erro < PCRE2_ERROR_NOMATCH ) {
-		throw new Exception( erro );
+		throw Exception( erro );
 	}
 	
 	return Php::Value( (char*) outputBuffer, (int) bufferSize );
