@@ -43,7 +43,7 @@ CentOS 6 requires at least devtoolset-2 to compile PHP-CPP.
 ```
 
 ###PCRE2
-The PCRE2 source can be found [here](http://www.pcre.org). Compiling this code requires that PCRE2 library be installed on the local system. The "configure" step was performed with these options:
+The PCRE2 source can be found [here](http://www.pcre.org). Compiling this code requires that PCRE2 library be installed on the local system.
 ```
  > ./configure --enable-jit --enable-newline-is-anycrlf
  > make
