@@ -31,14 +31,29 @@ print_r($matches);  //  ['a', 'a']
 ```
 This will perform replacements on multiple strings with only one compile step, and without needing them to be gathered into a single array.
 
-##PCRE2
+## Requirements For Compiling
+GCC, Make, and the standard libraries are required to build and install the custom extension, as is the PHP development libraries.
+
+CentOS 6 requires at least devtoolset-2 to compile PHP-CPP.
+```
+ > cd /etc/yum.repos.d
+ > wget http://people.centos.org/tru/devtools-2/devtools-2.repo
+ > yum --enablerepo=testing-devtools-2-centos-6 install devtoolset-2-gcc devtoolset-2-gcc-c++
+ > scl enable devtoolset-2 bash
+```
+
+###PCRE2
 The PCRE2 source can be found [here](http://www.pcre.org). Compiling this code requires that PCRE2 library be installed on the local system. The "configure" step was performed with these options:
-
 ```
-./configure --enable-jit --enable-newline-is-anycrlf
-make
-sudo make install
+ > ./configure --enable-jit --enable-newline-is-anycrlf
+ > make
+ > sudo make install
 ```
 
-##PHP-CPP
-The [Copernica](http://www.copernica.com) PHP-CPP C++ library is used to build this extension. It might help to use [my branch](https://github.com/diskerror/PHP-CPP) as it fixes some problems with the install step.
+###PHP-CPP
+The [Copernica](http://www.copernica.com) PHP-CPP library is used to build this extension. Use these commands:
+```
+ > make release
+ > sudo make install
+```
+Just using ```make``` will create a slower debug version.
