@@ -43,7 +43,7 @@ CentOS 6 requires at least devtoolset-2 to compile PHP-CPP.
 ```
 
 ###PCRE2
-The PCRE2 source can be found [here](http://www.pcre.org). Compiling this code requires that PCRE2 library be installed on the local system.
+The PCRE2 source can be found [here](http://www.pcre.org).
 ```
  > ./configure --enable-jit --enable-newline-is-anycrlf
  > make
@@ -51,7 +51,7 @@ The PCRE2 source can be found [here](http://www.pcre.org). Compiling this code r
 ```
 
 ###PHP-CPP
-The [Copernica](http://www.copernica.com) PHP-CPP library is used to build this extension. Use these commands:
+The [Copernica](http://www.copernica.com) PHP-CPP library is used to build this extension.
 ```
  > make release
  > sudo make install
