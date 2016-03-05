@@ -1,7 +1,6 @@
 
 #ifndef DISKERROR_PCREREPLACE_H
 #define DISKERROR_PCREREPLACE_H
-#pragma once
 
 #include "Pcre2.h"
 

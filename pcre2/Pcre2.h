@@ -1,7 +1,6 @@
 
 #ifndef DISKERROR_PCRE2_H
 #define DISKERROR_PCRE2_H
-#pragma once
 
 
 namespace Pcre2 {
