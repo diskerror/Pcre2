@@ -1,7 +1,7 @@
 # Pcre2
 This is a PHP extension that compiles a PCRE2 regular expression as separate step from the comparison step. Run time is faster than the builtin PCRE API for very large strings and multiple comparisons. It requires PCRE2 and PHP-CPP to be installed on the local system.
 
-The extension makefile has been tested on Debian 8 with PHP 5.6.
+The extension makefile has been tested on Debian 8 with PHP 5.6 and CentOS 6 with PHP 5.5.
 
 ##Usage
 In PHP, the PCRE function:
