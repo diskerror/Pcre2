@@ -3,7 +3,7 @@ This is a PHP extension that compiles a PCRE2 regular expression as separate ste
 
 The extension makefile has been tested on Debian 8 with PHP 5.6 and CentOS 6 with PHP 5.5.
 
-##Usage
+## Usage
 In PHP, the PCRE function:
 ```
 $subject = 'abacadabra';
@@ -42,7 +42,7 @@ CentOS 6 requires at least devtoolset-2 to compile PHP-CPP.
  > scl enable devtoolset-2 bash
 ```
 
-###PCRE2
+### PCRE2
 The PCRE2 source can be found [here](http://www.pcre.org).
 ```
  > ./configure --enable-jit --enable-newline-is-anycrlf
@@ -50,7 +50,7 @@ The PCRE2 source can be found [here](http://www.pcre.org).
  > sudo make install
 ```
 
-###PHP-CPP
+### PHP-CPP
 The [Copernica](http://www.copernica.com) PHP-CPP library is used to build this extension.
 ```
  > make release
