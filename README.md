@@ -51,7 +51,7 @@ The PCRE2 source can be found [here](http://www.pcre.org).
 ```
 
 ### PHP-CPP
-The [Copernica](http://www.copernica.com) PHP-CPP library is used to build this extension.
+The [Copernica](http://www.copernica.com) [PHP-CPP](http://www.php-cpp.com/) library is used to build this extension.
 ```
  > make release
  > sudo make install
