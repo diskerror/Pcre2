@@ -7,12 +7,12 @@ The extension makefile has been tested on Debian 8 with PHP 5.6 and CentOS 6 wit
 In PHP, the PCRE function:
 ```
 $subject = 'abacadabra';
-$result = pcre_replace('/a/', ' ', $subject); //  ' b c d br '
+$result = preg_replace('/a/', ' ', $subject); //  ' b c d br '
 
-$result = pcre_match('/a/', $subject);  //  true
+$result = preg_match('/a/', $subject);  //  true
 
 $matches = [];
-$result = pcre_match('/a/', $subject, $matches);  //  true
+$result = preg_match('/a/', $subject, $matches);  //  true
 print_r($matches);  //  ['a', 'a']
 ```
 Is equivalent to:
