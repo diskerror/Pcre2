@@ -3,10 +3,11 @@ NAME			= diskerror_pcre2
 EXTENSION_DIR	= $(shell php-config --extension-dir)
 EXTENSION 		= $(NAME).so
 INI 			= $(NAME).ini
+INI_PATH        = $(shell php --ini | head -1 | sed -r 's/.+: (.+)\/cli/\1/')
 
 COMPILER		= g++
 LINKER			= g++
-COMPILER_FLAGS	= -Wall -c -O2 -std=c++11 -fpic -I/usr/local/include
+COMPILER_FLAGS	= -Wall -c -O2 -std=c++11 -fPIC -I/usr/local/include
 LINKER_FLAGS	= -shared
 
 LDLIBS = \
@@ -15,7 +16,7 @@ LDLIBS = \
 	-Wl,-rpath,/usr/local/lib \
 	-lpcre2-8
 
-CPP	= $(COMPILER) $(COMPILER_FLAGS) -include "precompile.hpp" $< -o $@
+CPP	= $(COMPILER) $(COMPILER_FLAGS) -include precompile.hpp $< -o $@
 
 OBJECTS = \
 	obj/Pcre2.o \
@@ -27,7 +28,7 @@ OBJECTS = \
 
 all: $(EXTENSION)
 
-pre: cleanpre \
+pre: cleanall \
 	obj/precompile.o
 
 $(EXTENSION): obj/precompile.o $(OBJECTS)
@@ -57,31 +58,31 @@ obj/main.o: main.cp Pcre2/Replace.h Pcre2/HasMatch.h Pcre2/Match.h
 install: $(EXTENSION)
 	cp -f $(EXTENSION) $(EXTENSION_DIR)
 	chmod 644 $(EXTENSION_DIR)/$(EXTENSION)
-	if [ -d /etc/php5/mods-available/ ]; then \
-		echo "extension = "$(EXTENSION) > /etc/php5/mods-available/$(INI); \
-		chmod 644 /etc/php5/mods-available/$(INI); \
-		if [ -d /etc/php5/apache2/conf.d/ ]; then \
-			ln -sf /etc/php5/mods-available/$(INI) /etc/php5/apache2/conf.d/; \
+	if [ -d $(INI_PATH)/mods-available/ ]; then \
+		echo "extension = "$(EXTENSION) > $(INI_PATH)/mods-available/$(INI); \
+		chmod 644 $(INI_PATH)/mods-available/$(INI); \
+		if [ -d $(INI_PATH)/apache2/conf.d/ ]; then \
+			ln -sf $(INI_PATH)/mods-available/$(INI) $(INI_PATH)/apache2/conf.d/; \
 		fi; \
-		if [ -d /etc/php5/cli/conf.d/ ]; then \
-			ln -sf /etc/php5/mods-available/$(INI) /etc/php5/cli/conf.d/; \
+		if [ -d $(INI_PATH)/cli/conf.d/ ]; then \
+			ln -sf $(INI_PATH)/mods-available/$(INI) $(INI_PATH)/cli/conf.d/; \
 		fi; \
-		if [ -d /etc/php5/cgi/conf.d/ ]; then \
-			ln -sf /etc/php5/mods-available/$(INI) /etc/php5/cgi/conf.d/; \
+		if [ -d $(INI_PATH)/cgi/conf.d/ ]; then \
+			ln -sf $(INI_PATH)/mods-available/$(INI) $(INI_PATH)/cgi/conf.d/; \
 		fi; \
 	fi
 	if [ -d /etc/php.d/ ]; then \
-		echo "extension = "$(EXTENSION) > /etc/php.d/$(INI);\
+		echo "extension = $(EXTENSION)" > /etc/php.d/$(INI);\
 		chmod 644 /etc/php.d/$(INI);\
 	fi
 	if [ -d /etc/php-zts.d/ ]; then \
-		echo "extension = "$(EXTENSION) > /etc/php-zts.d/$(INI);\
+		echo "extension = $(EXTENSION)" > /etc/php-zts.d/$(INI);\
 		chmod 644 /etc/php-zts.d/$(INI);\
 	fi
 
 uninstall:
 	rm -f $(EXTENSION_DIR)/$(EXTENSION)
-	find /etc/php5 -name $(INI) | xargs rm -f
+	find $(INI_PATH) -name $(INI) | xargs rm -f
 	rm -f /etc/php.d/$(INI) /etc/php-zts.d/$(INI)
 
 clean:
@@ -89,4 +90,4 @@ clean:
 
 # remove all objects including precompiled header
 cleanall:
-	rm -rf $(EXTENSION) obj/* obj
+	rm -rf $(EXTENSION) obj
