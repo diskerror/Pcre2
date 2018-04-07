@@ -1,18 +1,18 @@
 # Pcre2
-This is a PHP extension that compiles a PCRE2 regular expression as separate step from the comparison step. Run time is faster than the builtin PCRE API for very large strings and multiple comparisons. It requires PCRE2 and PHP-CPP to be installed on the local system.
+This is a PHP extension that compiles a PCRE2 regular expression as separate step from the comparison step. Run time is faster than the builtin PCRE API for very large strings and multiple comparisons. It requires [PCRE2](http://www.pcre.org) and [PHP-CPP](http://www.php-cpp.com/) to be installed on the local system.
 
 The extension makefile has been tested on Debian 8 with PHP 5.6 and CentOS 6 with PHP 5.5.
 
-##Usage
+## Usage
 In PHP, the PCRE function:
 ```
 $subject = 'abacadabra';
-$result = pcre_replace('/a/', ' ', $subject); //  ' b c d br '
+$result = preg_replace('/a/', ' ', $subject); //  ' b c d br '
 
-$result = pcre_match('/a/', $subject);  //  true
+$result = preg_match('/a/', $subject);  //  true
 
 $matches = [];
-$result = pcre_match('/a/', $subject, $matches);  //  true
+$result = preg_match('/a/', $subject, $matches);  //  true
 print_r($matches);  //  ['a', 'a']
 ```
 Is equivalent to:
@@ -34,7 +34,7 @@ This will perform replacements on multiple strings with only one compile step, a
 ## Requirements For Compiling
 GCC, Make, and the standard libraries are required to build and install the custom extension, as is the PHP development libraries.
 
-CentOS 6 requires at least devtoolset-2 to compile PHP-CPP.
+CentOS 6 requires at least devtoolset-2 to compile [PHP-CPP](http://www.php-cpp.com/).
 ```
  > cd /etc/yum.repos.d
  > wget http://people.centos.org/tru/devtools-2/devtools-2.repo
@@ -42,7 +42,7 @@ CentOS 6 requires at least devtoolset-2 to compile PHP-CPP.
  > scl enable devtoolset-2 bash
 ```
 
-###PCRE2
+### PCRE2
 The PCRE2 source can be found [here](http://www.pcre.org).
 ```
  > ./configure --enable-jit --enable-newline-is-anycrlf
@@ -50,8 +50,8 @@ The PCRE2 source can be found [here](http://www.pcre.org).
  > sudo make install
 ```
 
-###PHP-CPP
-The [Copernica](http://www.copernica.com) PHP-CPP library is used to build this extension.
+### PHP-CPP
+The Copernica [PHP-CPP](http://www.php-cpp.com/) library is used to build this extension.
 ```
  > make release
  > sudo make install
