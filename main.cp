@@ -15,14 +15,14 @@ extern "C" {
  *
  *  @return void*   a pointer to an address that is understood by PHP
  */
-PHPCPP_EXPORT void *get_module() 
+PHPCPP_EXPORT void *get_module()
 {
 	// static(!) Php::Extension object that should stay in memory
 	// for the entire duration of the process (that's why it's static)
-	static Php::Extension extension("diskerror_pcre2", "0.1");
+	static Php::Extension extension("diskerror_pcre2", "0.3");
 	
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class<Pcre2::Replace> replace("Diskerror\\Pcre2\\Replace");
+	Php::Class <Pcre2::Replace> replace("Diskerror\\Pcre2\\Replace");
 	
 	replace.method("__construct", &Pcre2::Replace::__construct, {
 		Php::ByVal("expression", Php::Type::String, true),
@@ -39,7 +39,7 @@ PHPCPP_EXPORT void *get_module()
 	extension.add(std::move(replace));
 	
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class<Pcre2::HasMatch> hasMatch("Diskerror\\Pcre2\\HasMatch");
+	Php::Class <Pcre2::HasMatch> hasMatch("Diskerror\\Pcre2\\HasMatch");
 	
 	hasMatch.method("__construct", &Pcre2::HasMatch::__construct, {
 		Php::ByVal("expression", Php::Type::String, true),
@@ -54,7 +54,7 @@ PHPCPP_EXPORT void *get_module()
 	extension.add(std::move(hasMatch));
 	
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class<Pcre2::Match> match("Diskerror\\Pcre2\\Match");
+	Php::Class <Pcre2::Match> match("Diskerror\\Pcre2\\Match");
 	
 	match.method("__construct", &Pcre2::Match::__construct, {
 		Php::ByVal("expression", Php::Type::String, true),
@@ -74,4 +74,4 @@ PHPCPP_EXPORT void *get_module()
 }
 
 
-}	//	extern "C"
+}    //	extern "C"
