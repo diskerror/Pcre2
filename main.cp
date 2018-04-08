@@ -22,22 +22,51 @@ PHPCPP_EXPORT void *get_module()
 	static Php::Extension extension("diskerror_pcre2", "0.2");
 	
 	////////////////////////////////////////////////////////////////////////////
-	//	the PHP "exec" method also calls the C++ __invoke
 	Php::Class <Pcre2::Replace> replace("Diskerror\\Pcre2\\Replace");
-	replace.method<&Pcre2::Replace::__construct>("__construct");
-	replace.method<&Pcre2::Replace::exec>("exec");
+
+	replace.method<&Pcre2::Replace::__construct>("__construct", {
+		Php::ByVal("expression", Php::Type::String, true),
+		Php::ByVal("replacement", Php::Type::String, true),
+		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
+	});
+
+	//	the PHP "exec" method also calls the C++ __invoke
+	replace.method<&Pcre2::Replace::exec>("exec", {
+		Php::ByVal("subject", Php::Type::String, true),
+		Php::ByVal("offset", Php::Type::Numeric, false)
+	});
+
 	extension.add(std::move(replace));
 
 	////////////////////////////////////////////////////////////////////////////
 	Php::Class <Pcre2::HasMatch> hasMatch("Diskerror\\Pcre2\\HasMatch");
-	hasMatch.method<&Pcre2::HasMatch::__construct>("__construct");
-	hasMatch.method<&Pcre2::HasMatch::exec>("exec");
+
+	hasMatch.method<&Pcre2::HasMatch::__construct>("__construct", {
+		Php::ByVal("expression", Php::Type::String, true),
+		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
+	});
+
+	hasMatch.method<&Pcre2::HasMatch::exec>("exec", {
+		Php::ByVal("subject", Php::Type::String, true),
+		Php::ByVal("offset", Php::Type::Numeric, false)
+	});
+
 	extension.add(std::move(hasMatch));
 
 	////////////////////////////////////////////////////////////////////////////
 	Php::Class <Pcre2::Match> match("Diskerror\\Pcre2\\Match");
-	match.method<&Pcre2::Match::__construct>("__construct");
-	match.method<&Pcre2::Match::exec>("exec");
+
+	match.method<&Pcre2::Match::__construct>("__construct", {
+		Php::ByVal("expression", Php::Type::String, true),
+		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
+	});
+
+	match.method<&Pcre2::Match::exec>("exec", {
+		Php::ByVal("subject", Php::Type::String, true),
+		Php::ByRef("matches", Php::Type::Array, true),
+		Php::ByVal("offset", Php::Type::Numeric, false)
+	});
+
 	extension.add(std::move(match));
 	
 	// return the extension

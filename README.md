@@ -3,6 +3,8 @@ This is a PHP extension that compiles a PCRE2 regular expression as separate ste
 
 The extension makefile has been tested on Debian 8 with PHP 5.6 and CentOS 6 with PHP 5.5.
 
+This current version (0.2.2) has been updated to work with PHP-CPP version 2 and the makefile has been updated to work with many of the various PHP configuration paths.
+
 ## Usage
 In PHP, the PCRE function:
 ```
@@ -18,16 +20,16 @@ print_r($matches);  //  ['a', 'a']
 Is equivalent to:
 ```
 $subject = 'abacadabra';
-$replace = \Diskerror\Pcre2\Replace('a', ' ');
-$result = $replace->exec($subject);  //  ' b c d br '
+$replace = new Diskerror\Pcre2\Replace('a', ' ');
+echo '"', $replace->exec($subject), "\"\n";  //  " b c d br "
 
-$hasMatch = \Diskerror\Pcre2\HasMatch('a');
-$result = $hasMatch->exec($subject);  //  true
+$hasMatch = new Diskerror\Pcre2\HasMatch('a');
+var_dump($hasMatch->exec($subject));  //  bool(true)
 
 $matches = [];
-$match = \Diskerror\Pcre2\Match('a');
+$match = new Diskerror\Pcre2\Match('a');
 $result = $match->exec($subject, $matches);
-print_r($matches);  //  ['a', 'a']
+print_r($matches);  //  Array([0] => a)
 ```
 This will perform replacements on multiple strings with only one compile step, and without needing them to be gathered into a single array.
 
