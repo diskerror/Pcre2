@@ -3,7 +3,9 @@ This is a PHP extension that compiles a PCRE2 regular expression as separate ste
 
 The extension makefile has been tested on Debian 8 with PHP 5.6 and CentOS 6 with PHP 5.5.
 
-This current version (0.2.2) has been updated to work with PHP-CPP version 2 and the makefile has been updated to work with many of the various PHP configuration paths.
+This current version (0.2.1) has been updated to work with PHP-CPP version 2 and the makefile has been updated to work with many of the various PHP configuration paths.
+
+*Note:* passing arrays by reference doesn't work in version 2.0.0 of PHP-CPP;
 
 ## Usage
 In PHP, the PCRE function:
