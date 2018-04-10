@@ -1,7 +1,7 @@
 
-#include "Pcre2/Replace.h"
+#include "Pcre2/Replacer.h"
 #include "Pcre2/HasMatch.h"
-#include "Pcre2/Match.h"
+#include "Pcre2/Matcher.h"
 
 using namespace std;
 
@@ -22,52 +22,47 @@ PHPCPP_EXPORT void *get_module()
 	static Php::Extension extension("diskerror_pcre2", "0.2");
 	
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class <Pcre2::Replace> replace("Diskerror\\Pcre2\\Replace");
+	Php::Class <Pcre2::Replacer> replacer("Diskerror\\Pcre2\\Replacer");
 
-	replace.method<&Pcre2::Replace::__construct>("__construct", {
+	replacer.method<&Pcre2::Replacer::__construct>("__construct", {
 		Php::ByVal("expression", Php::Type::String, true),
-		Php::ByVal("replacement", Php::Type::String, true),
-		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
+		Php::ByVal("replacement", Php::Type::String, false),
+		Php::ByVal("compileOptions", Php::Type::Numeric, false),
+		Php::ByVal("matchOptions", Php::Type::Numeric, false)
 	});
 
-	//	the PHP "exec" method also calls the C++ __invoke
-	replace.method<&Pcre2::Replace::exec>("exec", {
+	replacer.method<&Pcre2::Replacer::replace>("replace", {
 		Php::ByVal("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
 
-	extension.add(std::move(replace));
+	extension.add(std::move(replacer));
 
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class <Pcre2::HasMatch> hasMatch("Diskerror\\Pcre2\\HasMatch");
+	Php::Class <Pcre2::Matcher> matcher("Diskerror\\Pcre2\\Matcher");
 
-	hasMatch.method<&Pcre2::HasMatch::__construct>("__construct", {
+	matcher.method<&Pcre2::Matcher::__construct>("__construct", {
 		Php::ByVal("expression", Php::Type::String, true),
-		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
+		Php::ByVal("compileOptions", Php::Type::Numeric, false),
+		Php::ByVal("matchOptions", Php::Type::Numeric, false)
 	});
 
-	hasMatch.method<&Pcre2::HasMatch::exec>("exec", {
+	hasMatch.method<&Pcre2::Matcher::hasMatch>("hasMatch", {
 		Php::ByVal("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
 
-	extension.add(std::move(hasMatch));
-
-	////////////////////////////////////////////////////////////////////////////
-	Php::Class <Pcre2::Match> match("Diskerror\\Pcre2\\Match");
-
-	match.method<&Pcre2::Match::__construct>("__construct", {
-		Php::ByVal("expression", Php::Type::String, true),
-		Php::ByVal("syntaxOption", Php::Type::Numeric, false)
-	});
-
-	match.method<&Pcre2::Match::exec>("exec", {
+	matcher.method<&Pcre2::Matcher::match>("match", {
 		Php::ByVal("subject", Php::Type::String, true),
-		Php::ByRef("matches", Php::Type::Array, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
 
-	extension.add(std::move(match));
+	matcher.method<&Pcre2::Matcher::matchAll>("matchAll", {
+		Php::ByVal("subject", Php::Type::String, true),
+		Php::ByVal("offset", Php::Type::Numeric, false)
+	});
+
+	extension.add(std::move(matcher));
 	
 	// return the extension
 	return extension;

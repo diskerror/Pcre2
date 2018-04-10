@@ -21,14 +21,14 @@ Is equivalent to:
 ```
 $subject = 'abacadabra';
 $replace = new Diskerror\Pcre2\Replace('a', ' ');
-echo '"', $replace->exec($subject), "\"\n";  //  " b c d br "
+echo '"', $replace->hasMatch($subject), "\"\n";  //  " b c d br "
 
 $hasMatch = new Diskerror\Pcre2\HasMatch('a');
-var_dump($hasMatch->exec($subject));  //  bool(true)
+var_dump($hasMatch->match($subject));  //  bool(true)
 
 $matches = [];
 $match = new Diskerror\Pcre2\Match('a');
-$result = $match->exec($subject, $matches);
+$result = $match->replace($subject, $matches);
 print_r($matches);  //  Array([0] => a)
 ```
 This will perform replacements on multiple strings with only one compile step, and without needing them to be gathered into a single array.

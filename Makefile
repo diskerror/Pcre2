@@ -20,6 +20,7 @@ CPP	= $(COMPILER) $(COMPILER_FLAGS) -include precompile.hpp $< -o $@
 
 OBJECTS = \
 	obj/Pcre2.o \
+	obj/Exception.o \
 	obj/Replace.o \
 	obj/HasMatch.o \
 	obj/Match.o \
@@ -38,8 +39,10 @@ obj/precompile.o: precompile.hpp
 	mkdir -p obj
 	$(COMPILER) $(COMPILER_FLAGS) $< -o $@
 
-obj/Pcre2.o: Pcre2/Pcre2.cp Pcre2/Pcre2.h
+obj/Pcre2.o: Pcre2/Pcre2.cp Pcre2/Pcre2.h Pcre2/Exception.h
 	$(CPP)
+
+obj/Exception.o: Pcre2/Exception.cp Pcre2/Exception.h
 
 obj/Replace.o: Pcre2/Replace.cp Pcre2/Replace.h
 	$(CPP)
