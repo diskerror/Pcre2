@@ -17,12 +17,12 @@ public:
 
 	virtual Php::Value add(Php::Parameters &) const;
 	virtual Php::Value remove(Php::Parameters &) const;
-	virtual Php::Value clear(Php::Parameters &) const;
+	virtual Php::Value clear() const;
 	virtual Php::Value set(Php::Parameters &) const;
 	virtual Php::Value hasFlag(Php::Parameters &) const;
 	virtual Php::Value get(Php::Parameters &) const;
-	virtual Php::Value getChanged(Php::Parameters &) const;
-	virtual Php::Value clearChanged(Php::Parameters &) const;
+	virtual Php::Value getChanged() const;
+	virtual Php::Value clearChanged() const;
 
 };
 
