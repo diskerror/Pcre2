@@ -14,7 +14,7 @@ uint32_t Pcre2::Matcher::_basicMatch(Php::Parameters &p) const
 
 	//	do match
 	int32_t matchCount = pcre2_match(
-		_regex,
+		_regex_compiled,
 		(const PCRE2_UCHAR *) subject,
 		PCRE2_ZERO_TERMINATED,
 		offset,

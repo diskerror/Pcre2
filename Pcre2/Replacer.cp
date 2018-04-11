@@ -19,7 +19,7 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 	PCRE2_UCHAR outputBuffer[bufferSize];
 	 
 	int32_t erro = pcre2_substitute(
-		_regex,
+		_regex_compiled,
 		(const PCRE2_UCHAR*) (const char *) p[0].buffer(),	//	subject,
 		PCRE2_ZERO_TERMINATED,
 		(( p.size() > 1 && (int32_t) p[1] > 0) ? (int32_t) p[1] : 0),	//	offset,

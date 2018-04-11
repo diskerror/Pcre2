@@ -19,11 +19,10 @@ LDLIBS = \
 CPP	= $(COMPILER) $(COMPILER_FLAGS) -include precompile.hpp $< -o $@
 
 OBJECTS = \
-	obj/Pcre2.o \
+	obj/Pcre2Base.o \
 	obj/Exception.o \
-	obj/Replace.o \
-	obj/HasMatch.o \
-	obj/Match.o \
+	obj/Replacer.o \
+	obj/Matcher.o \
 	obj/main.o
 
 
@@ -39,21 +38,18 @@ obj/precompile.o: precompile.hpp
 	mkdir -p obj
 	$(COMPILER) $(COMPILER_FLAGS) $< -o $@
 
-obj/Pcre2.o: Pcre2/Pcre2.cp Pcre2/Pcre2.h Pcre2/Exception.h
+obj/Pcre2Base.o: Pcre2/Base.cp Pcre2/Base.h Pcre2/Exception.h
 	$(CPP)
 
 obj/Exception.o: Pcre2/Exception.cp Pcre2/Exception.h
 
-obj/Replace.o: Pcre2/Replace.cp Pcre2/Replace.h
+obj/Replacer.o: Pcre2/Replacer.cp Pcre2/Replacer.h Pcre2/Base.h
 	$(CPP)
 
-obj/HasMatch.o: Pcre2/HasMatch.cp Pcre2/HasMatch.h
+obj/Matcher.o: Pcre2/Matcher.cp Pcre2/Matcher.h Pcre2/Base.h
 	$(CPP)
 
-obj/Match.o: Pcre2/Match.cp Pcre2/Match.h
-	$(CPP)
-
-obj/main.o: main.cp Pcre2/Replace.h Pcre2/HasMatch.h Pcre2/Match.h
+obj/main.o: main.cp Pcre2/Replacer.h Pcre2/Matcher.h
 	$(CPP)
 
 

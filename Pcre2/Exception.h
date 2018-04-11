@@ -5,7 +5,7 @@
 
 namespace Pcre2 {
 
-class Exception : public std::exception
+class Exception : public ::Php::Exception
 {
 	int32_t _err;
 

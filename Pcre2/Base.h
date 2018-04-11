@@ -7,14 +7,14 @@ namespace Pcre2 {
 
 class Base : public ::Php::Base {
 protected:
-
-	pcre2_code *_regex;
+	std::string _regex_string;
+	pcre2_code *_regex_compiled;
 	pcre2_match_data *_match_data;
 	pcre2_match_context *_mcontext;
 	pcre2_jit_stack *_jit_stack;
 
-	uint32_t _compileOptions;
-	uint32_t _matchOptions;
+	uint32_t _compileFlags;
+	uint32_t _matchFlags;
 
 	//	We can only get to this constructor from the child classes,
 	//		which forces this class into the role of an abstract class.

@@ -25,6 +25,13 @@ PHPCPP_EXPORT void *get_module()
 	Php::Class <Pcre2::Replacer> replacer("Diskerror\\Pcre2\\Replacer");
 
 	replacer.method<&Pcre2::Replacer::__construct>("__construct", {
+		Php::ByVal("expression", Php::Type::String, false),
+		Php::ByVal("replacement", Php::Type::String, false),
+		Php::ByVal("compileOptions", Php::Type::Numeric, false),
+		Php::ByVal("matchOptions", Php::Type::Numeric, false)
+	});
+
+	replacer.method<&Pcre2::Replacer::compile>("compile", {
 		Php::ByVal("expression", Php::Type::String, true),
 		Php::ByVal("replacement", Php::Type::String, false),
 		Php::ByVal("compileOptions", Php::Type::Numeric, false),
@@ -42,6 +49,12 @@ PHPCPP_EXPORT void *get_module()
 	Php::Class <Pcre2::Matcher> matcher("Diskerror\\Pcre2\\Matcher");
 
 	matcher.method<&Pcre2::Matcher::__construct>("__construct", {
+		Php::ByVal("expression", Php::Type::String, false),
+		Php::ByVal("compileOptions", Php::Type::Numeric, false),
+		Php::ByVal("matchOptions", Php::Type::Numeric, false)
+	});
+
+	matcher.method<&Pcre2::Matcher::compile>("compile", {
 		Php::ByVal("expression", Php::Type::String, true),
 		Php::ByVal("compileOptions", Php::Type::Numeric, false),
 		Php::ByVal("matchOptions", Php::Type::Numeric, false)
