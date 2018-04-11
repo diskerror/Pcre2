@@ -1,7 +1,7 @@
 
 #include "Matcher.h"
 
-uint32_t Pcre2::Matcher::_basicMatch(Php::Parameters &p) const
+uint32_t Matcher::_basicMatch(Php::Parameters &p) const
 {
 	const char *subject = (const char *) p[0];
 	int32_t offset = 0;
@@ -31,7 +31,7 @@ uint32_t Pcre2::Matcher::_basicMatch(Php::Parameters &p) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-Php::Value Pcre2::Matcher::hasMatch(Php::Parameters &p) const
+Php::Value Matcher::hasMatch(Php::Parameters &p) const
 {
 	uint32_t matchCount = _basicMatch(p);
 
@@ -43,7 +43,7 @@ Php::Value Pcre2::Matcher::hasMatch(Php::Parameters &p) const
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-Php::Value Pcre2::Matcher::match(Php::Parameters &p) const
+Php::Value Matcher::match(Php::Parameters &p) const
 {
 	uint32_t matchCount = _basicMatch(p);	//	updates _match_data
 
@@ -63,7 +63,7 @@ Php::Value Pcre2::Matcher::match(Php::Parameters &p) const
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //	INCOMPLETE!!!!!
-Php::Value Pcre2::Matcher::matchAll(Php::Parameters &p) const
+Php::Value Matcher::matchAll(Php::Parameters &p) const
 {
 	uint32_t matchCount = _basicMatch(p);	//	updates _match_data
 

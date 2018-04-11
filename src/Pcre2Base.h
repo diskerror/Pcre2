@@ -3,9 +3,8 @@
 #define DISKERROR_PCRE2_BASE_H
 
 
-namespace Pcre2 {
-
-class Base : public ::Php::Base {
+class Pcre2Base : public Php::Base
+{
 protected:
 	std::string _regex_string;
 	pcre2_code *_regex_compiled;
@@ -18,17 +17,15 @@ protected:
 
 	//	We can only get to this constructor from the child classes,
 	//		which forces this class into the role of an abstract class.
-	Base();
+	Pcre2Base();
 
 public:
 	virtual void __construct(Php::Parameters &);
 
 	void compile(Php::Parameters &);
 
-	virtual ~Base();
+	virtual ~Pcre2Base();
 
 };
-
-}	//	namespace Pcre2
 
 #endif	//	DISKERROR_PCRE2_BASE_H

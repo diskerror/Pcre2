@@ -1,7 +1,6 @@
 
-#include "Pcre2/Replacer.h"
-#include "Pcre2/HasMatch.h"
-#include "Pcre2/Matcher.h"
+#include "src/Replacer.h"
+#include "src/Matcher.h"
 
 using namespace std;
 
@@ -22,23 +21,23 @@ PHPCPP_EXPORT void *get_module()
 	static Php::Extension extension("diskerror_pcre2", "0.2");
 	
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class <Pcre2::Replacer> replacer("Diskerror\\Pcre2\\Replacer");
+	Php::Class <Replacer> replacer("Diskerror\\Pcre2\\Replacer");
 
-	replacer.method<&Pcre2::Replacer::__construct>("__construct", {
+	replacer.method<&Replacer::__construct>("__construct", {
 		Php::ByVal("expression", Php::Type::String, false),
 		Php::ByVal("replacement", Php::Type::String, false),
 		Php::ByVal("compileOptions", Php::Type::Numeric, false),
 		Php::ByVal("matchOptions", Php::Type::Numeric, false)
 	});
 
-	replacer.method<&Pcre2::Replacer::compile>("compile", {
+	replacer.method<&Replacer::compile>("compile", {
 		Php::ByVal("expression", Php::Type::String, true),
 		Php::ByVal("replacement", Php::Type::String, false),
 		Php::ByVal("compileOptions", Php::Type::Numeric, false),
 		Php::ByVal("matchOptions", Php::Type::Numeric, false)
 	});
 
-	replacer.method<&Pcre2::Replacer::replace>("replace", {
+	replacer.method<&Replacer::replace>("replace", {
 		Php::ByVal("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
@@ -46,31 +45,31 @@ PHPCPP_EXPORT void *get_module()
 	extension.add(std::move(replacer));
 
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class <Pcre2::Matcher> matcher("Diskerror\\Pcre2\\Matcher");
+	Php::Class <Matcher> matcher("Diskerror\\Pcre2\\Matcher");
 
-	matcher.method<&Pcre2::Matcher::__construct>("__construct", {
+	matcher.method<&Matcher::__construct>("__construct", {
 		Php::ByVal("expression", Php::Type::String, false),
 		Php::ByVal("compileOptions", Php::Type::Numeric, false),
 		Php::ByVal("matchOptions", Php::Type::Numeric, false)
 	});
 
-	matcher.method<&Pcre2::Matcher::compile>("compile", {
+	matcher.method<&Matcher::compile>("compile", {
 		Php::ByVal("expression", Php::Type::String, true),
 		Php::ByVal("compileOptions", Php::Type::Numeric, false),
 		Php::ByVal("matchOptions", Php::Type::Numeric, false)
 	});
 
-	hasMatch.method<&Pcre2::Matcher::hasMatch>("hasMatch", {
+	hasMatch.method<&Matcher::hasMatch>("hasMatch", {
 		Php::ByVal("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
 
-	matcher.method<&Pcre2::Matcher::match>("match", {
+	matcher.method<&Matcher::match>("match", {
 		Php::ByVal("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
 
-	matcher.method<&Pcre2::Matcher::matchAll>("matchAll", {
+	matcher.method<&Matcher::matchAll>("matchAll", {
 		Php::ByVal("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});

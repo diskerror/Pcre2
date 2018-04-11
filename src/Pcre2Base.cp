@@ -1,9 +1,9 @@
 
-#include "Base.h"
+#include "Pcre2Base.h"
 #include "Exception.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-Pcre2::Base::Base() {
+Pcre2Base::Pcre2Base() {
 	_regex_string = "";
 	_regex_compiled = NULL;
 	_mcontext = NULL;
@@ -14,7 +14,7 @@ Pcre2::Base::Base() {
 	_matchFlags = PCRE2_NOTEMPTY;
 }
 
-void Pcre2::Base::__construct(Php::Parameters &p) {
+void Pcre2Base::__construct(Php::Parameters &p) {
 	if (p.size() == 0) {
 		p[0] = "";
 	}
@@ -22,7 +22,7 @@ void Pcre2::Base::__construct(Php::Parameters &p) {
 	compile(p);
 }
 
-Php::Value Pcre2::Base::compile(Php::Parameters &p) {
+Php::Value Pcre2Base::compile(Php::Parameters &p) {
 	if (p.size() > 1) {
 		_compileFlags = (uint32_t) p[1];
 	}
@@ -54,7 +54,7 @@ Php::Value Pcre2::Base::compile(Php::Parameters &p) {
 	if (_mcontext == NULL)
 		throw Exception(-1);
 
-	_jit_stack = pcre2_jit_stack_create(8 * 1024, 256 * 1024, NULL);
+	_jit_stack = pcre2_jit_stack_create(32 * 1024, 1024 * 1024, NULL);
 	pcre2_jit_stack_assign(_mcontext, NULL, _jit_stack);
 
 	_match_data = pcre2_match_data_create_from_pattern(_regex_compiled, NULL);
@@ -64,7 +64,7 @@ Php::Value Pcre2::Base::compile(Php::Parameters &p) {
 	return Php::Object("MyClass", this);
 }
 
-Pcre2::Base::~Base() {
+Pcre2Base::~Pcre2Base() {
 	if (_match_data != NULL)
 		pcre2_match_data_free(_match_data);
 
