@@ -39,19 +39,19 @@ obj/precompile.o: precompile.hpp
 	mkdir -p obj
 	$(COMPILER) $(COMPILER_FLAGS) $< -o $@
 
-obj/Pcre2Base.o: src/Pcre2Base.cp src/Pcre2Base.h src/Flags.h src/Exception.h
+obj/Pcre2Base.o: src/Pcre2Base.cp src/Pcre2Base.h src/flags/Compile.h src/flags/Match.h src/Exception.h
 	$(CPP)
 
-obj/Flags.o: src/Flags.cp src/Flags.h src/flags/FlagsBase.h src/flags/Compile.h src/flags/Match.h src/flags/Replace.h
+obj/Flags.o: src/flags/Base.cp src/flags/Base.h src/flags/Compile.h src/flags/Match.h src/flags/Replace.h
 	$(CPP)
 
 obj/Exception.o: src/Exception.cp src/Exception.h
 	$(CPP)
 
-obj/Replacer.o: src/Replacer.cp src/Replacer.h src/Base.h
+obj/Replacer.o: src/Replacer.cp src/Replacer.h src/Pcre2Base.h src/flags/Replace.h
 	$(CPP)
 
-obj/Matcher.o: src/Matcher.cp src/Matcher.h src/Base.h
+obj/Matcher.o: src/Matcher.cp src/Matcher.h src/Pcre2Base.h
 	$(CPP)
 
 obj/main.o: main.cp src/Replacer.h src/Matcher.h

@@ -3,6 +3,7 @@
 #define DISKERROR_PCRE2_REPLACER_H
 
 #include "Pcre2Base.h"
+#include "flags/Replace.h"
 
 class Replacer : public Pcre2Base
 {

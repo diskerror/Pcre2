@@ -14,10 +14,12 @@ class Replace : public Match
 public:
 	Replace() : Match() {}
 
-	const int64_t NOTBOL = PCRE2_NOTBOL;    //	Subject string is not the beginning of a line
-	const int64_t NOTEOL = PCRE2_NOTEOL;    //	Subject string is not the end of a line
-	const int64_t NOTEMPTY = PCRE2_NOTEMPTY;    //	An empty string is not a valid match
-	const int64_t NOTEMPTY_ATSTART = PCRE2_NOTEMPTY_ATSTART;    //	An empty string at the start is not a valid match
+	//	Additional options available to replace method.
+	const int64_t GLOBAL = PCRE2_SUBSTITUTE_GLOBAL;  //	Replace all occurrences in the subject
+	const int64_t EXTENDED = PCRE2_SUBSTITUTE_EXTENDED;  //	Do extended replacement processing
+	const int64_t UNSET_EMPTY = PCRE2_SUBSTITUTE_UNSET_EMPTY;  //	Simple unset insert = empty string
+	const int64_t UNKNOWN_UNSET = PCRE2_SUBSTITUTE_UNKNOWN_UNSET;  //	Treat unknown group as unset
+//	const int64_t OVERFLOW_LENGTH = PCRE2_SUBSTITUTE_OVERFLOW_LENGTH;  //	If overflow, compute needed length   ???
 };
 
 }

@@ -4,10 +4,9 @@
 
 #define DISKERROR_PCRE2_DO_JIT    0x0000000100000000
 
-#include "Flags.h"
+#include "flags/Base.h"
 #include "flags/Compile.h"
 #include "flags/Match.h"
-#include "flags/Replace.h"
 #include "Exception.h"
 
 class Pcre2Base : public Php::Base
@@ -24,8 +23,8 @@ protected:
 	Pcre2Base();
 
 public:
-	Flags *compileFlags;
-	Flags *matchFlags;
+	Flags::Compile *compileFlags;
+	Flags::Match *matchFlags;
 
 	virtual void __construct(Php::Parameters &);
 
