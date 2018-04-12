@@ -7,6 +7,8 @@
 
 #include "Match.h"
 
+namespace Flags {
+
 class Replace : public Match
 {
 public:
@@ -17,5 +19,7 @@ public:
 	const int64_t NOTEMPTY = PCRE2_NOTEMPTY;    //	An empty string is not a valid match
 	const int64_t NOTEMPTY_ATSTART = PCRE2_NOTEMPTY_ATSTART;    //	An empty string at the start is not a valid match
 };
+
+}
 
 #endif //DISKERROR_PCRE2_FLAGS_MATCH_H

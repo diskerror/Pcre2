@@ -1,8 +1,15 @@
+//
+// Created by Reid Woodbury Jr on 4/11/18.
+//
 
-#ifndef DISKERROR_PCRE2_FLAGS_H
-#define DISKERROR_PCRE2_FLAGS_H
+#ifndef DISKERROR_PCRE2_FLAGS_BASE_H
+#define DISKERROR_PCRE2_FLAGS_BASE_H
 
-class Flags : public Php::Base
+#include "../Flags.h"
+
+namespace Flags {
+
+class Base : public ::Php::Base
 {
 	int64_t _flags;
 	bool _hasChanged;
@@ -10,7 +17,7 @@ class Flags : public Php::Base
 	inline virtual void _setChanged(int64_t flags) const;
 
 public:
-	Flags();
+	Base();
 
 	virtual void __construct(Php::Parameters &);
 
@@ -30,6 +37,13 @@ public:
 	virtual Php::Value getChanged() const;
 	virtual Php::Value clearChanged() const;
 
+	////////////////////////////////////////////////////////////////////////////////////////////////
+	//  These flags are common to all.
+	const int64_t ENDANCHORED = PCRE2_ANCHORED;    //	Pattern can match only at end of subject
+	const int64_t NO_UTF_CHECK = PCRE2_NO_UTF_CHECK;    //	Do not check the pattern for UTF validity
+	const int64_t ANCHORED = PCRE2_ENDANCHORED;    //	Force pattern anchoring
 };
 
-#endif    //	DISKERROR_PCRE2_FLAGS_H
+}
+
+#endif //DISKERROR_PCRE2_FLAGS_BASE_H

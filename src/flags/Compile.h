@@ -5,12 +5,14 @@
 #ifndef DISKERROR_PCRE2_FLAGS_COMPILE_H
 #define DISKERROR_PCRE2_FLAGS_COMPILE_H
 
-#include "FlagsBase.h"
+#include "Base.h"
+
+namespace Flags {
 
 class Compile : public FlagsBase
 {
 public:
-	Compile() : FlagsBase() {}
+	Compile() : Base() {}
 
 	const int64_t ALLOW_EMPTY_CLASS = PCRE2_ALLOW_EMPTY_CLASS;    //	Allow empty classes
 	const int64_t ALT_BSUX = PCRE2_ALT_BSUX;    //	Alternative handling of \u, \U, and \x
@@ -40,5 +42,7 @@ public:
 	const int64_t LITERAL = PCRE2_LITERAL;    //	Pattern characters are all literal
 	const int64_t DO_JIT = 0x0000000100000000;    //	Do more optimizing with JIT compiler.
 };
+
+}
 
 #endif //DISKERROR_PCRE2_FLAGS_COMPILE_H
