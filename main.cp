@@ -1,6 +1,7 @@
 
-#include "src/Replacer.h"
+#include "src/Flags.h"
 #include "src/Matcher.h"
+#include "src/Replacer.h"
 
 using namespace std;
 
@@ -19,47 +20,58 @@ PHPCPP_EXPORT void *get_module()
 	// static(!) Php::Extension object that should stay in memory
 	// for the entire duration of the process (that's why it's static)
 	static Php::Extension extension("diskerror_pcre2", "0.2");
-	
-	////////////////////////////////////////////////////////////////////////////
-	Php::Class <Replacer> replacer("Diskerror\\Pcre2\\Replacer");
-
-	replacer.method<&Replacer::__construct>("__construct", {
-		Php::ByVal("expression", Php::Type::String, false),
-		Php::ByVal("replacement", Php::Type::String, false),
-		Php::ByVal("compileOptions", Php::Type::Numeric, false),
-		Php::ByVal("matchOptions", Php::Type::Numeric, false)
-	});
-
-	replacer.method<&Replacer::compile>("compile", {
-		Php::ByVal("expression", Php::Type::String, true),
-		Php::ByVal("replacement", Php::Type::String, false),
-		Php::ByVal("compileOptions", Php::Type::Numeric, false),
-		Php::ByVal("matchOptions", Php::Type::Numeric, false)
-	});
-
-	replacer.method<&Replacer::replace>("replace", {
-		Php::ByVal("subject", Php::Type::String, true),
-		Php::ByVal("offset", Php::Type::Numeric, false)
-	});
-
-	extension.add(std::move(replacer));
 
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class <Matcher> matcher("Diskerror\\Pcre2\\Matcher");
+	Php::Class<Flags> flags("Diskerror\\Flags");
+
+	flags.method<&Flags::__construct>("__construct", {
+		Php::ByVal("flags", Php::Type::Numeric, false)
+	});
+
+	flags.method<&Flags::add>("add", {
+		Php::ByVal("whichFlag", Php::Type::Numeric, true)
+	});
+
+	flags.method<&Flags::remove>("remove", {
+		Php::ByVal("whichFlag", Php::Type::Numeric, true)
+	});
+
+	flags.method<&Flags::clear>("clear");
+
+	flags.method<&Flags::set>("set", {
+		Php::ByVal("flags", Php::Type::Numeric, true)
+	});
+
+	flags.method<&Flags::hasFlag>("hasFlag", {
+		Php::ByVal("whichFlag", Php::Type::Numeric, false)
+	});
+
+	flags.method<&Flags::get>("get", {
+		Php::ByVal("flags", Php::Type::Numeric, false)
+	});
+
+	flags.method<&Flags::getChanged>("getChanged");
+
+	flags.method<&Flags::clearChanged>("clearChanged");
+
+	extension.add(std::move(flags));
+
+	////////////////////////////////////////////////////////////////////////////
+	Php::Class<Matcher> matcher("Diskerror\\Pcre2\\Matcher");
 
 	matcher.method<&Matcher::__construct>("__construct", {
-		Php::ByVal("expression", Php::Type::String, false),
-		Php::ByVal("compileOptions", Php::Type::Numeric, false),
-		Php::ByVal("matchOptions", Php::Type::Numeric, false)
+		Php::ByVal("regex", Php::Type::String, false),
+		Php::ByVal("compileFlags", Php::Type::Numeric, false),
+		Php::ByVal("matchFlags", Php::Type::Numeric, false)
 	});
 
 	matcher.method<&Matcher::compile>("compile", {
-		Php::ByVal("expression", Php::Type::String, true),
-		Php::ByVal("compileOptions", Php::Type::Numeric, false),
-		Php::ByVal("matchOptions", Php::Type::Numeric, false)
+		Php::ByVal("regex", Php::Type::String, false),
+		Php::ByVal("compileFlags", Php::Type::Numeric, false),
+		Php::ByVal("matchFlags", Php::Type::Numeric, false)
 	});
 
-	hasMatch.method<&Matcher::hasMatch>("hasMatch", {
+	matcher.method<&Matcher::hasMatch>("hasMatch", {
 		Php::ByVal("subject", Php::Type::String, true),
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
@@ -75,7 +87,31 @@ PHPCPP_EXPORT void *get_module()
 	});
 
 	extension.add(std::move(matcher));
-	
+
+	////////////////////////////////////////////////////////////////////////////
+	Php::Class <Replacer> replacer("Diskerror\\Pcre2\\Replacer");
+
+	replacer.method<&Replacer::__construct>("__construct", {
+		Php::ByVal("regex", Php::Type::String, false),
+		Php::ByVal("replacement", Php::Type::String, false),
+		Php::ByVal("compileFlags", Php::Type::Numeric, false),
+		Php::ByVal("matchFlags", Php::Type::Numeric, false)
+	});
+
+	replacer.method<&Replacer::compile>("compile", {
+		Php::ByVal("regex", Php::Type::String, true),
+		Php::ByVal("replacement", Php::Type::String, false),
+		Php::ByVal("compileFlags", Php::Type::Numeric, false),
+		Php::ByVal("matchFlags", Php::Type::Numeric, false)
+	});
+
+	replacer.method<&Replacer::replace>("replace", {
+		Php::ByVal("subject", Php::Type::String, true),
+		Php::ByVal("offset", Php::Type::Numeric, false)
+	});
+
+	extension.add(std::move(replacer));
+
 	// return the extension
 	return extension;
 }

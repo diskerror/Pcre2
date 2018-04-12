@@ -2,6 +2,13 @@
 #ifndef DISKERROR_PCRE2_BASE_H
 #define DISKERROR_PCRE2_BASE_H
 
+#define DISKERROR_PCRE2_DO_JIT    0x0000000100000000
+
+#include "Flags.h"
+#include "flags/Compile.h"
+#include "flags/Match.h"
+#include "flags/Replace.h"
+#include "Exception.h"
 
 class Pcre2Base : public Php::Base
 {
@@ -12,20 +19,24 @@ protected:
 	pcre2_match_context *_mcontext;
 	pcre2_jit_stack *_jit_stack;
 
-	uint32_t _compileFlags;
-	uint32_t _matchFlags;
-
 	//	We can only get to this constructor from the child classes,
-	//		which forces this class into the role of an abstract class.
+	//		which forces this class into the role of abstract.
 	Pcre2Base();
 
 public:
+	Flags *compileFlags;
+	Flags *matchFlags;
+
 	virtual void __construct(Php::Parameters &);
 
-	void compile(Php::Parameters &);
+	virtual Php::Value compile(Php::Parameters &);
 
+	virtual Php::Value setRegex(Php::Parameters &);
+	virtual Php::Value getRegex();
+
+	virtual void __destruct();
 	virtual ~Pcre2Base();
 
 };
 
-#endif	//	DISKERROR_PCRE2_BASE_H
+#endif    //	DISKERROR_PCRE2_BASE_H

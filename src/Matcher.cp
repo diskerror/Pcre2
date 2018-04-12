@@ -3,7 +3,7 @@
 
 uint32_t Matcher::_basicMatch(Php::Parameters &p) const
 {
-	const char *subject = (const char *) p[0];
+	const char *subject = (const char *) p[0].c_str();
 	int32_t offset = 0;
 	if (p.size() > 1) {
 		offset = p[1];
@@ -24,7 +24,7 @@ uint32_t Matcher::_basicMatch(Php::Parameters &p) const
 	);
 
 	if (matchCount < PCRE2_ERROR_NOMATCH) {
-		throw Exception(matchCount);
+		throw Pcre2::Exception(matchCount);
 	}
 
 	return matchCount;
@@ -52,6 +52,7 @@ Php::Value Matcher::match(Php::Parameters &p) const
 		return output;	//	empty array
 	}
 
+	const char *subject = (const char *) p[0].c_str();
 	PCRE2_SIZE* ovector = pcre2_get_ovector_pointer(_match_data);
 	PCRE2_SIZE i;
 	for (i = 0; i < (PCRE2_SIZE) matchCount; i++) {
@@ -72,6 +73,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 		return output;	//	empty array
 	}
 
+	const char *subject = (const char *) p[0].c_str();
 	PCRE2_SIZE* ovector = pcre2_get_ovector_pointer(_match_data);
 	PCRE2_SIZE i;
 	for (i = 0; i < (PCRE2_SIZE) matchCount; i++) {
