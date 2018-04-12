@@ -22,37 +22,37 @@ PHPCPP_EXPORT void *get_module()
 	static Php::Extension extension("diskerror_pcre2", "0.2");
 
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class<Flags> flags("Diskerror\\Flags");
+	Php::Class<Flags> flags("Diskerror\\Pcre2\\Flags\\Base");
 
-	flags.method<&Flags::__construct>("__construct", {
+	flags.method<&Flags::Base::__construct>("__construct", {
 		Php::ByVal("flags", Php::Type::Numeric, false)
 	});
 
-	flags.method<&Flags::add>("add", {
+	flags.method<&Flags::Base::add>("add", {
 		Php::ByVal("whichFlag", Php::Type::Numeric, true)
 	});
 
-	flags.method<&Flags::remove>("remove", {
+	flags.method<&Flags::Base::remove>("remove", {
 		Php::ByVal("whichFlag", Php::Type::Numeric, true)
 	});
 
-	flags.method<&Flags::clear>("clear");
+	flags.method<&Flags::Base::clear>("clear");
 
-	flags.method<&Flags::set>("set", {
+	flags.method<&Flags::Base::set>("set", {
 		Php::ByVal("flags", Php::Type::Numeric, true)
 	});
 
-	flags.method<&Flags::hasFlag>("hasFlag", {
+	flags.method<&Flags::Base::hasFlag>("hasFlag", {
 		Php::ByVal("whichFlag", Php::Type::Numeric, false)
 	});
 
-	flags.method<&Flags::get>("get", {
+	flags.method<&Flags::Base::get>("get", {
 		Php::ByVal("flags", Php::Type::Numeric, false)
 	});
 
-	flags.method<&Flags::getChanged>("getChanged");
+	flags.method<&Flags::Base::getChanged>("getChanged");
 
-	flags.method<&Flags::clearChanged>("clearChanged");
+	flags.method<&Flags::Base::clearChanged>("clearChanged");
 
 	extension.add(std::move(flags));
 

@@ -12,7 +12,8 @@ namespace Flags {
 class Match : public Base
 {
 public:
-	Match() : Base() {}
+	Match() : Base()
+	{ _flags = NOTEMPTY; }
 
 	const int64_t NOTBOL = PCRE2_NOTBOL;    //	Subject string is not the beginning of a line
 	const int64_t NOTEOL = PCRE2_NOTEOL;    //	Subject string is not the end of a line

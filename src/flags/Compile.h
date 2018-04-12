@@ -9,10 +9,11 @@
 
 namespace Flags {
 
-class Compile : public FlagsBase
+class Compile : public Base
 {
 public:
-	Compile() : Base() {}
+	Compile() : Base()
+	{ _flags = UTF; }
 
 	const int64_t ALLOW_EMPTY_CLASS = PCRE2_ALLOW_EMPTY_CLASS;    //	Allow empty classes
 	const int64_t ALT_BSUX = PCRE2_ALT_BSUX;    //	Alternative handling of \u, \U, and \x

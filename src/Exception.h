@@ -3,7 +3,7 @@
 #define DISKERROR_PCRE2_EXCEPTION_H
 
 
-class Exception : public ::Php::Exception
+class Exception : public Php::Exception
 {
 	int32_t _err;
 

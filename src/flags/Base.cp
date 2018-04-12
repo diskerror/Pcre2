@@ -6,13 +6,13 @@ Flags::Base::Base()
 	_hasChanged = true;
 }
 
-void Flags::Base::__construct(Php::Parameters &)
+void Flags::Base::__construct(Php::Parameters &p)
 {
-	if(p.size() > 0)
-		_flags = p[0];
+	if (p.size() > 0)
+		_flags = p[0].numericValue();
 }
 
-inline void Flags::Base::_setChanged(int64_t flags) const
+inline void Flags::Base::_setChanged(int64_t flags)
 {
 	if (flags != _flags) {
 		_flags = flags;
@@ -20,48 +20,48 @@ inline void Flags::Base::_setChanged(int64_t flags) const
 	}
 }
 
-Php::Value Flags::Base::add(Php::Parameters &) const
+Php::Value Flags::Base::add(Php::Parameters &p)
 {
-	_setChanged(_flags | (int64_t) p[0]);
+	_setChanged(_flags | p[0].numericValue());
 	return this;
 }
 
-Php::Value Flags::Base::remove(Php::Parameters &) const
+Php::Value Flags::Base::remove(Php::Parameters &p)
 {
-	_setChanged(_flags & ~((int64_t)p[0]));
-	return $this;
+	_setChanged(_flags & ~p[0].numericValue());
+	return this;
 }
 
-Php::Value Flags::Base::clear() const
+Php::Value Flags::Base::clear()
 {
 	_setChanged(0);
-	return $this;
+	return this;
 }
 
-Php::Value Flags::Base::set(Php::Parameters &) const
+Php::Value Flags::Base::set(Php::Parameters &p)
 {
-	_setChanged((int64_t) p[0]);
-	return $this;
+	_setChanged(p[0].numericValue());
+	return this;
 }
 
-void Flags::Base::set(int64_t flags) const
+inline void Flags::Base::set(int64_t flags)
 {
 	_setChanged(flags);
 }
 
-Php::Value Flags::Base::hasFlag(Php::Parameters &) const
+Php::Value Flags::Base::hasFlag(Php::Parameters &p) const
 {
-	return (bool) (_flags & (int64_t) p[0]);
+	return (bool) (_flags & p[0].numericValue());
 }
 
-bool Flags::Base::hasFlag(int64_t whichFlags) const
+inline bool Flags::Base::hasFlag(int64_t whichFlags) const
 {
 	return (bool) (_flags & whichFlags);
 }
 
-Php::Value Flags::Base::get(Php::Parameters &) const
+Php::Value Flags::Base::get(Php::Parameters &p) const
 {
-	return _flags & (int64_t) p[0];
+	return _flags & p[0].numericValue();
 }
 
 int64_t Flags::Base::get(int64_t whichFlags) const
@@ -74,8 +74,8 @@ Php::Value Flags::Base::getChanged() const
 	return _hasChanged;
 }
 
-Php::Value Flags::Base::clearChanged() const
+Php::Value Flags::Base::clearChanged()
 {
 	_hasChanged = false;
-	return $this;
+	return this;
 }
