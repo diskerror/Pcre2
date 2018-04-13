@@ -104,18 +104,6 @@ Php::Value Pcre2Base::getRegex() const
 
 void Pcre2Base::__destruct()
 {
-	_regex_string = "";
-
-	if (matchFlags != NULL) {
-		delete matchFlags;
-		matchFlags = NULL;
-	}
-
-	if (compileFlags != NULL) {
-		delete compileFlags;
-		compileFlags = NULL;
-	}
-
 	if (_match_data != NULL) {
 		pcre2_match_data_free(_match_data);
 		_match_data = NULL;
@@ -135,6 +123,19 @@ void Pcre2Base::__destruct()
 		pcre2_code_free(_regex_compiled);
 		_regex_compiled = NULL;
 	}
+
+	if (matchFlags != NULL) {
+		delete matchFlags;
+		matchFlags = NULL;
+	}
+
+	if (compileFlags != NULL) {
+		delete compileFlags;
+		compileFlags = NULL;
+	}
+
+	_regex_string.clear();
+	_regex_string.shrink_to_fit();
 }
 
 Pcre2Base::~Pcre2Base()

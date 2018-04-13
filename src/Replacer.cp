@@ -2,37 +2,62 @@
 #include "Replacer.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void Replacer::__construct(Php::Parameters& p)
+void Replacer::__construct(Php::Parameters &p)
 {
-	//			subjectLen		syntaxOption
-	compile(p[0].buffer(), ((p.size() > 2) ? (int32_t) p[2] : 0));
-	_replace = (const PCRE2_UCHAR*) (const char *) p[1].buffer();
+	_replacement = p.size() > 1 ? p[1].buffer() : "";
+
+	if (p.size() > 1)
+		p.erase(p.begin + 1);
+	Pcre2Base::__construct(p);
+}
+
+Php::Value Replacer::setReplacement(Php::Parameters &p)
+{
+	_replacement = p[0].stringValue();
+
+	if (p.size() > 1 && !p[1].isNull()) {
+		matchFlags->set(p[1].numericValue());
+	}
+
+	return this;
+}
+
+Php::Value Replacer::getReplacement() const
+{
+	return _replacement;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 Php::Value Replacer::replace(Php::Parameters &p) const
 {
-	uint32_t subjectLen = p[0].size();
-	PCRE2_SIZE bufferSize = ( subjectLen < 2048 ) ? 4096 : (subjectLen*1.3);
+	PCRE2_SIZE subjectLen = p[0].size();
+	PCRE2_SIZE bufferSize = (subjectLen < 2048) ? 4096 : (subjectLen * 1.3);
 	PCRE2_UCHAR outputBuffer[bufferSize];
-	 
+
 	int32_t erro = pcre2_substitute(
 		_regex_compiled,
-		(const PCRE2_UCHAR*) (const char *) p[0].buffer(),	//	subject,
+		(const PCRE2_UCHAR *) (const char *) p[0].buffer(),    //	subject,
 		PCRE2_ZERO_TERMINATED,
-		(( p.size() > 1 && (int32_t) p[1] > 0) ? (int32_t) p[1] : 0),	//	offset,
-		PCRE2_SUBSTITUTE_GLOBAL,	//	options
+		(PCRE2_SIZE)(p.size() > 1 ? p[1].numericValue() : 0),    //	offset
+		(uint32_t) matchFlags->get(0x00000000FFFFFFFF),    //	options
 		_match_data,
-		NULL,		//	match context
-		_replace,
+		_mcontext,        //	match context
+		(PCRE2_SPTR) _replacement.c_str(),
 		PCRE2_ZERO_TERMINATED,
 		outputBuffer,
 		&bufferSize
 	);
-	
-	if ( erro < PCRE2_ERROR_NOMATCH ) {
-		throw Exception( erro );
+
+	if (erro < PCRE2_ERROR_NOMATCH) {
+		throw Exception(erro);
 	}
-	
-	return Php::Value( (char*) outputBuffer, (int) bufferSize );
+
+	return Php::Value((char *) outputBuffer, (int) bufferSize);
+}
+
+void Pcre2Base::__destruct()
+{
+	Pcre2Base::__destruct();
+	_replacement.clear();
+	_replacement.shrink_to_fit();
 }
