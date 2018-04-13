@@ -12,14 +12,6 @@ void Flags::Base::__construct(Php::Parameters &p)
 		_flags = p[0].numericValue();
 }
 
-inline void Flags::Base::_setChanged(int64_t flags)
-{
-	if (flags != _flags) {
-		_flags = flags;
-		_hasChanged = true;
-	}
-}
-
 Php::Value Flags::Base::add(Php::Parameters &p)
 {
 	_setChanged(_flags | p[0].numericValue());
@@ -44,29 +36,14 @@ Php::Value Flags::Base::set(Php::Parameters &p)
 	return this;
 }
 
-inline void Flags::Base::set(int64_t flags)
-{
-	_setChanged(flags);
-}
-
 Php::Value Flags::Base::hasFlag(Php::Parameters &p) const
 {
 	return (bool) (_flags & p[0].numericValue());
 }
 
-inline bool Flags::Base::hasFlag(int64_t whichFlags) const
-{
-	return (bool) (_flags & whichFlags);
-}
-
 Php::Value Flags::Base::get(Php::Parameters &p) const
 {
 	return _flags & p[0].numericValue();
-}
-
-int64_t Flags::Base::get(int64_t whichFlags) const
-{
-	return _flags & whichFlags;
 }
 
 Php::Value Flags::Base::getChanged() const
