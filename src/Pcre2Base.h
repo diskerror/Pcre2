@@ -31,7 +31,7 @@ public:
 	virtual Php::Value compile(Php::Parameters &);
 
 	virtual Php::Value setRegex(Php::Parameters &);
-	virtual Php::Value getRegex();
+	virtual Php::Value getRegex() const;
 
 	virtual void __destruct();
 	virtual ~Pcre2Base();

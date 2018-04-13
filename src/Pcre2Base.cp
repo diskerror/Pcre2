@@ -14,23 +14,23 @@ Pcre2Base::Pcre2Base()
 	matchFlags = NULL;
 }
 
-void Pcre2Base::__construct(Php::Parameters &pIn)
+void Pcre2Base::__construct(Php::Parameters &p)
 {
 	if (compileFlags == NULL) {
 		compileFlags = new Flags::Compile();
-		if (pIn.size() > 1 && !pIn[1].isNull())
-			compileFlags->set((int64_t) pIn[1]);
+		if (p.size() > 1 && !p[1].isNull())
+			compileFlags->set(p[1].numericValue());
 	}
 
 	if (matchFlags == NULL) {
 		matchFlags = new Flags::Match();
-		if (pIn.size() > 2 && !pIn[2].isNull())
-			matchFlags->set((int64_t) pIn[2]);
+		if (p.size() > 2 && !p[2].isNull())
+			matchFlags->set(p[2].numericValue());
 	}
 
-	if (pIn.size() > 0 && !pIn[0].isNull() && pIn[0] != "") {
-		pIn.resize(1);
-		compile(pIn);
+	if (p.size() > 0 && !p[0].isNull() && p[0] != "") {
+		p.resize(1);
+		compile(p);
 	}
 }
 
@@ -67,7 +67,7 @@ Php::Value Pcre2Base::compile(Php::Parameters &p)
 	if (_mcontext == NULL)
 		throw Exception(-1);
 
-	if (compileFlags->hasFlag(compileFlags->DO_JIT)) {
+	if (compileFlags->hasFlag(Flags::Compile::DO_JIT)) {
 		int jitError = pcre2_jit_compile(_regex_compiled, PCRE2_JIT_COMPLETE);
 		if (jitError)
 			throw Exception(jitError);
@@ -91,13 +91,13 @@ Php::Value Pcre2Base::setRegex(Php::Parameters &p)
 	_regex_string = p[0].stringValue();
 
 	if (p.size() > 1 && !p[1].isNull()) {
-		compileFlags->set((int64_t) p[1]);
+		compileFlags->set(p[1].numericValue());
 	}
 
 	return this;
 }
 
-Php::Value Pcre2Base::getRegex()
+Php::Value Pcre2Base::getRegex() const
 {
 	return _regex_string;
 }

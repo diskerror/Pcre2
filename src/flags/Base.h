@@ -9,15 +9,15 @@ namespace Flags {
 
 class Base : public ::Php::Base
 {
-protected:
 	int64_t _flags;
 	bool _hasChanged;
 
 	inline virtual void _setChanged(int64_t flags);
 
-public:
+protected:
 	Base();
 
+public:
 	virtual void __construct(Php::Parameters &);
 
 	virtual Php::Value add(Php::Parameters &);
@@ -38,9 +38,9 @@ public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	//  These flags are common to all.
-	const int64_t ENDANCHORED = PCRE2_ANCHORED;    //	Pattern can match only at end of subject
-	const int64_t NO_UTF_CHECK = PCRE2_NO_UTF_CHECK;    //	Do not check the pattern for UTF validity
-	const int64_t ANCHORED = PCRE2_ENDANCHORED;    //	Force pattern anchoring
+	static const int64_t ENDANCHORED = PCRE2_ANCHORED;    //	Pattern can match only at end of subject
+	static const int64_t NO_UTF_CHECK = PCRE2_NO_UTF_CHECK;    //	Do not check the pattern for UTF validity
+	static const int64_t ANCHORED = PCRE2_ENDANCHORED;    //	Force pattern anchoring
 };
 
 }
