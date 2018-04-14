@@ -2,12 +2,9 @@
 #ifndef DISKERROR_PCRE2_BASE_H
 #define DISKERROR_PCRE2_BASE_H
 
-#define DISKERROR_PCRE2_DO_JIT    0x0000000100000000
-
 #include "flags/Base.h"
 #include "flags/Compile.h"
 #include "flags/Match.h"
-#include "Pcre2Exception.h"
 
 class Pcre2Base : public Php::Base
 {
@@ -35,6 +32,17 @@ public:
 
 	virtual void __destruct();
 	virtual ~Pcre2Base();
+
+
+	static void handleNumericError(int32_t err)
+	{
+		const uint32_t messgLen = 1024;
+		PCRE2_UCHAR8 message[messgLen];
+
+		pcre2_get_error_message(err, message, messgLen);
+
+		throw Php::Exception((const char *) message);
+	}
 };
 
 #endif    //	DISKERROR_PCRE2_BASE_H

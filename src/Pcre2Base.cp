@@ -49,7 +49,7 @@ Php::Value Pcre2Base::compile(Php::Parameters &p)
 	}
 
 	if (_regex_string == "") {
-		throw Pcre2Exception("regular expression string cannot be empty");
+		throw Php::Exception("regular expression string cannot be empty");
 	}
 
 	int errorcode;
@@ -65,16 +65,16 @@ Php::Value Pcre2Base::compile(Php::Parameters &p)
 	);
 
 	if (_regex_compiled == NULL)
-		throw Pcre2Exception(errorcode);
+		handleNumericError(errorcode);
 
 	_mcontext = pcre2_match_context_create(NULL);
 	if (_mcontext == NULL)
-		throw Pcre2Exception("match context returned null, could not obtain memory");
+		throw Php::Exception("match context returned null, could not obtain memory");
 
 	if (compileFlags->hasFlag(Flags::Compile::DO_JIT)) {
 		int32_t jitError = pcre2_jit_compile(_regex_compiled, PCRE2_JIT_COMPLETE);
 		if (jitError)
-			throw Pcre2Exception(jitError);
+			handleNumericError(jitError);
 
 		_jit_stack = pcre2_jit_stack_create(32 * 1024, 1024 * 1024, NULL);
 		pcre2_jit_stack_assign(_mcontext, NULL, _jit_stack);
@@ -82,15 +82,15 @@ Php::Value Pcre2Base::compile(Php::Parameters &p)
 
 	_match_data = pcre2_match_data_create_from_pattern(_regex_compiled, NULL);
 	if (_match_data == NULL)
-		throw Pcre2Exception("match data returned null, could not obtain memory");
+		throw Php::Exception("match data returned null, could not obtain memory");
 
 	return this;
 }
 
 Php::Value Pcre2Base::setRegex(Php::Parameters &p)
 {
-	if(p[0].stringValue() == "")
-		throw Pcre2Exception("regular expression string cannot be empty");
+	if (p[0].stringValue() == "")
+		throw Php::Exception("regular expression string cannot be empty");
 
 	_regex_string = p[0].stringValue();
 

@@ -23,9 +23,8 @@ int32_t Matcher::_basicMatch(Php::Parameters &p) const
 		NULL
 	);
 
-	if (matchCount < PCRE2_ERROR_NOMATCH) {
-		throw Pcre2Exception(matchCount);
-	}
+	if (matchCount < PCRE2_ERROR_NOMATCH)
+		handleNumericError(matchCount);
 
 	return matchCount;
 }

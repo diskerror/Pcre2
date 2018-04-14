@@ -48,9 +48,8 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 		&bufferSize
 	);
 
-	if (res < PCRE2_ERROR_NOMATCH) {
-		throw Pcre2Exception(res);
-	}
+	if (res < PCRE2_ERROR_NOMATCH)
+		handleNumericError(res);
 
 	return Php::Value((char *) outputBuffer, (int) bufferSize);
 }
