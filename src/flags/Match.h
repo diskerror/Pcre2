@@ -13,7 +13,7 @@ class Match : public Base
 {
 public:
 	Match() : Base()
-	{ set(NOTEMPTY); }
+	{ add(NOTEMPTY); }
 
 	static const int64_t NOTBOL = PCRE2_NOTBOL;    //	Subject string is not the beginning of a line
 	static const int64_t NOTEOL = PCRE2_NOTEOL;    //	Subject string is not the end of a line

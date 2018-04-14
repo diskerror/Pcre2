@@ -2,7 +2,7 @@
 
 Flags::Base::Base()
 {
-	_flags = 0;
+	_flags = NO_UTF_CHECK;
 	_hasChanged = true;
 }
 

@@ -44,6 +44,10 @@ Php::Value Pcre2Base::compile(Php::Parameters &p)
 		compileFlags->set(p[1].numericValue());
 	}
 
+	if (p.size() > 2 && !p[2].isNull()) {
+		matchFlags->set(p[2].numericValue());
+	}
+
 	if (_regex_string == "") {
 		throw Pcre2Exception("regular expression string cannot be empty");
 	}
