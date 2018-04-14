@@ -1,7 +1,7 @@
 
-#include "src/Flags.h"
-#include "src/Matcher.h"
-#include "src/Replacer.h"
+#include "flags/Base.h"
+#include "Matcher.h"
+#include "Replacer.h"
 
 using namespace std;
 
@@ -22,39 +22,39 @@ PHPCPP_EXPORT void *get_module()
 	static Php::Extension extension("diskerror_pcre2", "0.2");
 
 	////////////////////////////////////////////////////////////////////////////
-	Php::Class<Flags> flags("Diskerror\\Pcre2\\Flags\\Base");
-
-	flags.method<&Flags::Base::__construct>("__construct", {
-		Php::ByVal("flags", Php::Type::Numeric, false)
-	});
-
-	flags.method<&Flags::Base::add>("add", {
-		Php::ByVal("whichFlag", Php::Type::Numeric, true)
-	});
-
-	flags.method<&Flags::Base::remove>("remove", {
-		Php::ByVal("whichFlag", Php::Type::Numeric, true)
-	});
-
-	flags.method<&Flags::Base::clear>("clear");
-
-	flags.method<&Flags::Base::set>("set", {
-		Php::ByVal("flags", Php::Type::Numeric, true)
-	});
-
-	flags.method<&Flags::Base::hasFlag>("hasFlag", {
-		Php::ByVal("whichFlag", Php::Type::Numeric, false)
-	});
-
-	flags.method<&Flags::Base::get>("get", {
-		Php::ByVal("flags", Php::Type::Numeric, false)
-	});
-
-	flags.method<&Flags::Base::getChanged>("getChanged");
-
-	flags.method<&Flags::Base::clearChanged>("clearChanged");
-
-	extension.add(std::move(flags));
+//	Php::Class<Flags> flags("Diskerror\\Pcre2\\Flags\\Base");
+//
+//	flags.method<&Flags::Base::__construct>("__construct", {
+//		Php::ByVal("flags", Php::Type::Numeric, false)
+//	});
+//
+//	flags.method<&Flags::Base::add>("add", {
+//		Php::ByVal("flag", Php::Type::Numeric, true)
+//	});
+//
+//	flags.method<&Flags::Base::remove>("remove", {
+//		Php::ByVal("whichFlag", Php::Type::Numeric, true)
+//	});
+//
+//	flags.method<&Flags::Base::clear>("clear");
+//
+//	flags.method<&Flags::Base::set>("set", {
+//		Php::ByVal("flags", Php::Type::Numeric, true)
+//	});
+//
+//	flags.method<&Flags::Base::hasFlag>("hasFlag", {
+//		Php::ByVal("whichFlag", Php::Type::Numeric, false)
+//	});
+//
+//	flags.method<&Flags::Base::get>("get", {
+//		Php::ByVal("flags", Php::Type::Numeric, false)
+//	});
+//
+//	flags.method<&Flags::Base::getChanged>("getChanged");
+//
+//	flags.method<&Flags::Base::clearChanged>("clearChanged");
+//
+//	extension.add(std::move(flags));
 
 	////////////////////////////////////////////////////////////////////////////
 	Php::Class<Matcher> matcher("Diskerror\\Pcre2\\Matcher");

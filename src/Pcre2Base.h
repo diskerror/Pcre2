@@ -7,7 +7,7 @@
 #include "flags/Base.h"
 #include "flags/Compile.h"
 #include "flags/Match.h"
-#include "Exception.h"
+#include "Pcre2Exception.h"
 
 class Pcre2Base : public Php::Base
 {

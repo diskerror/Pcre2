@@ -15,7 +15,7 @@ public:
 	virtual void		__construct(Php::Parameters&);
 
 	virtual Php::Value setReplacement(Php::Parameters &);
-	virtual Php::Value getReplacement(() const;
+	virtual Php::Value getReplacement() const;
 
 	virtual Php::Value	replace(Php::Parameters &) const;
 

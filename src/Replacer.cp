@@ -7,7 +7,7 @@ void Replacer::__construct(Php::Parameters &p)
 	_replacement = p.size() > 1 ? p[1].buffer() : "";
 
 	if (p.size() > 1)
-		p.erase(p.begin + 1);
+		p.erase(p.begin() + 1);
 	Pcre2Base::__construct(p);
 }
 
@@ -34,7 +34,7 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 	PCRE2_SIZE bufferSize = (subjectLen < 2048) ? 4096 : (subjectLen * 1.3);
 	PCRE2_UCHAR outputBuffer[bufferSize];
 
-	int32_t erro = pcre2_substitute(
+	int res = pcre2_substitute(
 		_regex_compiled,
 		(const PCRE2_UCHAR *) (const char *) p[0].buffer(),    //	subject,
 		PCRE2_ZERO_TERMINATED,
@@ -48,14 +48,14 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 		&bufferSize
 	);
 
-	if (erro < PCRE2_ERROR_NOMATCH) {
-		throw Exception(erro);
+	if (res < PCRE2_ERROR_NOMATCH) {
+		throw Pcre2Exception(res);
 	}
 
 	return Php::Value((char *) outputBuffer, (int) bufferSize);
 }
 
-void Pcre2Base::__destruct()
+void Replacer::__destruct()
 {
 	Pcre2Base::__destruct();
 	_replacement.clear();
