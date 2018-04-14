@@ -4,9 +4,6 @@
 #include "Matcher.h"
 #include "Replacer.h"
 
-using namespace std;
-
-
 extern "C" {
 
 PHPCPP_EXPORT void *get_module()
@@ -182,11 +179,6 @@ PHPCPP_EXPORT void *get_module()
 	replaceFlags.property("UNKNOWN_UNSET", Flags::Replace::UNKNOWN_UNSET, Php::Const);
 
 	extension.add(std::move(replaceFlags));
-
-	////////////////////////////////////////////////////////////////////////////
-//	Php::Class<Pcre2Exception> pcre2exception("Diskerror\\Pcre2\\Flags\\Exception");
-//
-//	extension.add(std::move(pcre2exception));
 
 	////////////////////////////////////////////////////////////////////////////
 	// return the extension
