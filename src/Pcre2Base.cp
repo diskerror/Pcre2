@@ -34,7 +34,7 @@ void Pcre2Base::__construct(Php::Parameters &p)
 	}
 }
 
-Php::Value Pcre2Base::compile(Php::Parameters &p)
+void Pcre2Base::compile(Php::Parameters &p)
 {
 	if (p.size() > 0 && !p[0].isNull()) {
 		_regex_string = p[0].rawValue();
@@ -83,11 +83,9 @@ Php::Value Pcre2Base::compile(Php::Parameters &p)
 	_match_data = pcre2_match_data_create_from_pattern(_regex_compiled, NULL);
 	if (_match_data == NULL)
 		throw Php::Exception("match data returned null, could not obtain memory");
-
-	return this;
 }
 
-Php::Value Pcre2Base::setRegex(Php::Parameters &p)
+void Pcre2Base::setRegex(Php::Parameters &p)
 {
 	if (p[0].stringValue() == "")
 		throw Php::Exception("regular expression string cannot be empty");
@@ -97,8 +95,6 @@ Php::Value Pcre2Base::setRegex(Php::Parameters &p)
 	if (p.size() > 1 && !p[1].isNull()) {
 		compileFlags->set(p[1].numericValue());
 	}
-
-	return this;
 }
 
 Php::Value Pcre2Base::getRegex() const

@@ -90,8 +90,4 @@ uninstall:
 	rm -f /etc/php.d/$(INI) /etc/php-zts.d/$(INI)
 
 clean:
-	rm -f $(EXTENSION) $(OBJECTS)
-
-# remove all objects including precompiled header
-cleanall:
 	rm -rf $(EXTENSION) obj

@@ -20,13 +20,13 @@ protected:
 public:
 	void __construct(Php::Parameters &);
 
-	Php::Value add(Php::Parameters &);
+	void add(Php::Parameters &);
 	inline void add(int64_t flags) { _setChanged(_flags | flags); }
 
-	Php::Value remove(Php::Parameters &);
-	Php::Value clear();
+	void remove(Php::Parameters &);
+	void clear();
 
-	Php::Value set(Php::Parameters &);
+	void set(Php::Parameters &);
 	inline void set(int64_t flags) { _setChanged(flags); }
 
 	Php::Value hasFlag(Php::Parameters &) const;
@@ -36,7 +36,7 @@ public:
 	inline int64_t get(int64_t whichFlags) const { return _flags & whichFlags; };
 
 	Php::Value getChanged() const;
-	Php::Value clearChanged();
+	void clearChanged();
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	//  These flags are common to all.

@@ -7,19 +7,20 @@
 
 class Replacer : public Pcre2Base
 {
-	std::string	_replacement;
+	std::string _replacement;
 
 public:
-		Replacer() : Pcre2Base() {};
-		
-	virtual void		__construct(Php::Parameters&);
+	Replacer() : Pcre2Base()
+	{};
 
-	virtual Php::Value setReplacement(Php::Parameters &);
-	virtual Php::Value getReplacement() const;
+	void __construct(Php::Parameters &);
 
-	virtual Php::Value	replace(Php::Parameters &) const;
+	void setReplacement(Php::Parameters &);
+	Php::Value getReplacement() const;
 
-	virtual void __destruct();
+	Php::Value replace(Php::Parameters &) const;
+
+	void __destruct();
 };
 
-#endif	//	DISKERROR_PCRE2_REPLACER_H
+#endif    //	DISKERROR_PCRE2_REPLACER_H

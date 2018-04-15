@@ -2,12 +2,15 @@
 <?php
 
 $subject = 'abacadabra';
-$replace = new Diskerror\Pcre2\Replace('a', ' ');
-echo '"', $replace->hasMatch($subject), "\"\n";  //  " b c d br "
 
-$hasMatch = new Diskerror\Pcre2\HasMatch('a');
-var_dump($hasMatch->match($subject));  //  bool(true)
+$matcher = new Diskerror\Pcre2\Matcher('a');
+$res = $matcher->hasMatch($subject);
+var_dump($matcher->hasMatch($subject));  //  bool(true)
 
-$match = new Diskerror\Pcre2\Match('a');
-$matches = $match->replace($subject, $matches);
+$matches = $matcher->match($subject);
 print_r($matches);  //  Array([0] => a)
+
+$replacer = new Diskerror\Pcre2\Replacer('a', ' ');
+echo '"', $replacer->replace($subject), "\"\n";  //  - b c d br -
+
+echo '"', $replacer->replaceFlags, "\"\n";

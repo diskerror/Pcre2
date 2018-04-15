@@ -1,9 +1,9 @@
 
 #include "Matcher.h"
+#include <iostream>
 
 int32_t Matcher::_basicMatch(Php::Parameters &p) const
 {
-	const char *subject = (const char *) p[0].stringValue().c_str();
 	int32_t offset = 0;
 	if (p.size() > 1) {
 		offset = p[1];
@@ -15,10 +15,10 @@ int32_t Matcher::_basicMatch(Php::Parameters &p) const
 	//	do match
 	int32_t matchCount = pcre2_match(
 		_regex_compiled,
-		(const PCRE2_UCHAR *) subject,
+		(const PCRE2_UCHAR *) p[0].stringValue().c_str(),
 		PCRE2_ZERO_TERMINATED,
 		offset,
-		0,    //	options
+		(uint32_t) matchFlags->get(0x00000000FFFFFFFF),
 		_match_data,
 		NULL
 	);

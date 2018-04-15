@@ -15,23 +15,24 @@ protected:
 	pcre2_match_context *_mcontext;
 	pcre2_jit_stack     *_jit_stack;
 
-	//	We can only get to this constructor from the child classes,
-	//		which forces this class into the role of abstract.
+public:
 	Pcre2Base();
 
-public:
 	Flags::Compile *compileFlags;
 	Flags::Match *matchFlags;
 
-	virtual void __construct(Php::Parameters &);
+	Php::Value getCompileFlags(){ return compileFlags; }
+	Php::Value getMatchFlags(){ return matchFlags; }
 
-	virtual Php::Value compile(Php::Parameters &);
+	void __construct(Php::Parameters &);
 
-	virtual Php::Value setRegex(Php::Parameters &);
-	virtual Php::Value getRegex() const;
+	void compile(Php::Parameters &);
 
-	virtual void __destruct();
-	virtual ~Pcre2Base();
+	void setRegex(Php::Parameters &);
+	Php::Value getRegex() const;
+
+	void __destruct();
+	~Pcre2Base();
 
 
 	static void handleNumericError(int32_t err)

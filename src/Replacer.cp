@@ -11,15 +11,13 @@ void Replacer::__construct(Php::Parameters &p)
 	Pcre2Base::__construct(p);
 }
 
-Php::Value Replacer::setReplacement(Php::Parameters &p)
+void Replacer::setReplacement(Php::Parameters &p)
 {
 	_replacement = p[0].stringValue();
 
 	if (p.size() > 1 && !p[1].isNull()) {
 		matchFlags->set(p[1].numericValue());
 	}
-
-	return this;
 }
 
 Php::Value Replacer::getReplacement() const
@@ -51,7 +49,7 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 	if (res < PCRE2_ERROR_NOMATCH)
 		handleNumericError(res);
 
-	return Php::Value((char *) outputBuffer, (int) bufferSize);
+	return Php::Value((const char *) outputBuffer, (int) bufferSize);
 }
 
 void Replacer::__destruct()
