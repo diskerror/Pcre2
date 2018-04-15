@@ -6,6 +6,11 @@ void Replacer::__construct(Php::Parameters &p)
 {
 	_replacement = p.size() > 1 ? p[1].buffer() : "";
 
+	if (p.size() > 3 && !p[3].isNull())
+		matchFlags |= p[3].numericValue();
+	else
+		matchFlags |= Flags::Replace::GLOBAL;
+
 	if (p.size() > 1)
 		p.erase(p.begin() + 1);
 	Pcre2Base::__construct(p);
@@ -16,7 +21,7 @@ void Replacer::setReplacement(Php::Parameters &p)
 	_replacement = p[0].stringValue();
 
 	if (p.size() > 1 && !p[1].isNull()) {
-		matchFlags->set(p[1].numericValue());
+		matchFlags = p[1].numericValue();
 	}
 }
 
@@ -37,7 +42,7 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 		(const PCRE2_UCHAR *) (const char *) p[0].buffer(),    //	subject,
 		PCRE2_ZERO_TERMINATED,
 		(PCRE2_SIZE)(p.size() > 1 ? p[1].numericValue() : 0),    //	offset
-		(uint32_t) matchFlags->get(0x00000000FFFFFFFF),    //	options
+		(uint32_t) (matchFlags & 0x00000000FFFFFFFF),    //	options
 		_match_data,
 		_mcontext,        //	match context
 		(PCRE2_SPTR) _replacement.c_str(),

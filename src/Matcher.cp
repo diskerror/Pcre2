@@ -18,7 +18,7 @@ int32_t Matcher::_basicMatch(Php::Parameters &p) const
 		(const PCRE2_UCHAR *) p[0].stringValue().c_str(),
 		PCRE2_ZERO_TERMINATED,
 		offset,
-		(uint32_t) matchFlags->get(0x00000000FFFFFFFF),
+		(uint32_t) (matchFlags & 0x00000000FFFFFFFF),
 		_match_data,
 		NULL
 	);

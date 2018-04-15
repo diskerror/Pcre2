@@ -13,4 +13,4 @@ print_r($matches);  //  Array([0] => a)
 $replacer = new Diskerror\Pcre2\Replacer('a', ' ');
 echo '"', $replacer->replace($subject), "\"\n";  //  - b c d br -
 
-echo '"', $replacer->replaceFlags, "\"\n";
+var_dump($matcher->matchFlags);

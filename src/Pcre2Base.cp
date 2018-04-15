@@ -1,7 +1,6 @@
 
 #include "Pcre2Base.h"
 
-////////////////////////////////////////////////////////////////////////////////////////////////////
 Pcre2Base::Pcre2Base()
 {
 	_regex_string = "";
@@ -10,23 +9,23 @@ Pcre2Base::Pcre2Base()
 	_jit_stack = NULL;
 	_match_data = NULL;
 
-	compileFlags = NULL;
-	matchFlags = NULL;
+	compileFlags = 0;
+	matchFlags = 0;
 }
 
 void Pcre2Base::__construct(Php::Parameters &p)
 {
-	if (compileFlags == NULL) {
-		compileFlags = new Flags::Compile();
-		if (p.size() > 1 && !p[1].isNull())
-			compileFlags->set(p[1].numericValue());
-	}
+	if (p.size() > 1 && !p[1].isNull())
+		compileFlags |= p[1].numericValue();
+	else
+		compileFlags |= Flags::Compile::UTF;
 
-	if (matchFlags == NULL) {
-		matchFlags = new Flags::Match();
-		if (p.size() > 2 && !p[2].isNull())
-			matchFlags->set(p[2].numericValue());
-	}
+	if (p.size() > 2 && !p[2].isNull())
+		matchFlags |= p[2].numericValue();
+	else
+		matchFlags |= Flags::Match::NOTEMPTY;
+
+	Php::Value self(this);
 
 	if (p.size() > 0 && !p[0].isNull() && p[0] != "") {
 		p.resize(1);
@@ -36,21 +35,17 @@ void Pcre2Base::__construct(Php::Parameters &p)
 
 void Pcre2Base::compile(Php::Parameters &p)
 {
-	if (p.size() > 0 && !p[0].isNull()) {
+	if (p.size() > 0 && !p[0].isNull())
 		_regex_string = p[0].rawValue();
-	}
 
-	if (p.size() > 1 && !p[1].isNull()) {
-		compileFlags->set(p[1].numericValue());
-	}
+	if (p.size() > 1 && !p[1].isNull())
+		compileFlags = p[1].numericValue();
 
-	if (p.size() > 2 && !p[2].isNull()) {
-		matchFlags->set(p[2].numericValue());
-	}
+	if (p.size() > 2 && !p[2].isNull())
+		matchFlags = p[2].numericValue();
 
-	if (_regex_string == "") {
+	if (_regex_string == "")
 		throw Php::Exception("regular expression string cannot be empty");
-	}
 
 	int errorcode;
 	PCRE2_SIZE erroroffset;
@@ -58,7 +53,7 @@ void Pcre2Base::compile(Php::Parameters &p)
 	_regex_compiled = pcre2_compile(
 		(PCRE2_SPTR) _regex_string.c_str(),
 		PCRE2_ZERO_TERMINATED,
-		(uint32_t) compileFlags->get(0x00000000FFFFFFFF),
+		(uint32_t) (compileFlags & 0x00000000FFFFFFFF),
 		&errorcode,
 		&erroroffset,
 		NULL    //	match context
@@ -71,7 +66,7 @@ void Pcre2Base::compile(Php::Parameters &p)
 	if (_mcontext == NULL)
 		throw Php::Exception("match context returned null, could not obtain memory");
 
-	if (compileFlags->hasFlag(Flags::Compile::DO_JIT)) {
+	if (compileFlags & Flags::Compile::DO_JIT) {
 		int32_t jitError = pcre2_jit_compile(_regex_compiled, PCRE2_JIT_COMPLETE);
 		if (jitError)
 			handleNumericError(jitError);
@@ -93,7 +88,7 @@ void Pcre2Base::setRegex(Php::Parameters &p)
 	_regex_string = p[0].stringValue();
 
 	if (p.size() > 1 && !p[1].isNull()) {
-		compileFlags->set(p[1].numericValue());
+		compileFlags = p[1].numericValue();
 	}
 }
 
@@ -124,28 +119,12 @@ void Pcre2Base::__destruct()
 		_regex_compiled = NULL;
 	}
 
-	if (matchFlags != NULL) {
-		delete matchFlags;
-		matchFlags = NULL;
-	}
-
-	if (compileFlags != NULL) {
-		delete compileFlags;
-		compileFlags = NULL;
-	}
-
 	_regex_string.clear();
 	_regex_string.shrink_to_fit();
 }
 
 Pcre2Base::~Pcre2Base()
 {
-	if (matchFlags != NULL)
-		delete matchFlags;
-
-	if (compileFlags != NULL)
-		delete compileFlags;
-
 	if (_match_data != NULL)
 		pcre2_match_data_free(_match_data);
 
@@ -155,6 +134,7 @@ Pcre2Base::~Pcre2Base()
 	if (_mcontext != NULL)
 		pcre2_match_context_free(_mcontext);
 
-	if (_regex_compiled != NULL)
+	if (_regex_compiled != NULL) {
 		pcre2_code_free(_regex_compiled);
+	}
 }
