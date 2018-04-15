@@ -18,10 +18,13 @@ protected:
 public:
 	Pcre2Base();
 
-//	Flags::Compile *compileFlags;
-//	Flags::Match *matchFlags;
 	int64_t compileFlags;
+	Php::Value getCompileFlags() const { return compileFlags; }
+	void setCompileFlags(const Php::Value &v) { compileFlags = v.numericValue(); }    // test for error?
+
 	int64_t matchFlags;
+	Php::Value getMatchFlags() const { return matchFlags; }
+	void setMatchFlags(const Php::Value &v) { matchFlags = v.numericValue(); }    // test for error?
 
 	void __construct(Php::Parameters &);
 
