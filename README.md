@@ -61,3 +61,6 @@ The Copernica [PHP-CPP](http://www.php-cpp.com/) library is used to build this e
  > sudo make install
 ```
 Just using ```make``` will create a slower debug version.
+
+## Flags
+The Flags class is not used in the PCRE2 class as neither PHP-CPP nor Zephir can handle nested classes, where a class property is a class. The compiler and matcher flags have been exposed as integers.
