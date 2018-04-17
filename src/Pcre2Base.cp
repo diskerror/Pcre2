@@ -7,7 +7,6 @@ Pcre2Base::Pcre2Base()
 	_regex_compiled = NULL;
 	_mcontext = NULL;
 	_jit_stack = NULL;
-	_match_data = NULL;
 
 	compileFlags = 0;
 	matchFlags = 0;
@@ -53,31 +52,40 @@ void Pcre2Base::compile(Php::Parameters &p)
 	_regex_compiled = pcre2_compile(
 		(PCRE2_SPTR) _regex_string.c_str(),
 		PCRE2_ZERO_TERMINATED,
-		(uint32_t) (compileFlags & 0x00000000FFFFFFFF),
+		(uint32_t)(compileFlags & 0x00000000FFFFFFFF),
 		&errorcode,
 		&erroroffset,
 		NULL    //	match context
 	);
 
-	if (_regex_compiled == NULL)
-		handleNumericError(errorcode);
+	if (_regex_compiled == NULL) {
+		PCRE2_UCHAR eMessage[256];
+		pcre2_get_error_message(errorcode, eMessage, sizeof(eMessage));
+
+		char eOut[1024];
+		std::snprintf(eOut, sizeof(eOut), "PCRE2 compilation failed at offset %d: %s", (int)erroroffset, eMessage);
+		throw Php::Exception(eOut);
+	}
 
 	_mcontext = pcre2_match_context_create(NULL);
 	if (_mcontext == NULL)
 		throw Php::Exception("match context returned null, could not obtain memory");
 
+	//  Apply JIT option
 	if (compileFlags & Flags::Compile::DO_JIT) {
 		int32_t jitError = pcre2_jit_compile(_regex_compiled, PCRE2_JIT_COMPLETE);
-		if (jitError)
-			handleNumericError(jitError);
+		if (jitError) {
+			PCRE2_UCHAR eMessage[256];
+			pcre2_get_error_message(jitError, eMessage, sizeof(eMessage));
+			throw Php::Exception((const char *) eMessage);
+		}
 
 		_jit_stack = pcre2_jit_stack_create(32 * 1024, 1024 * 1024, NULL);
+		if (_jit_stack == NULL)
+			throw Php::Exception("an error occurred when creating JIT stack");
+
 		pcre2_jit_stack_assign(_mcontext, NULL, _jit_stack);
 	}
-
-	_match_data = pcre2_match_data_create_from_pattern(_regex_compiled, NULL);
-	if (_match_data == NULL)
-		throw Php::Exception("match data returned null, could not obtain memory");
 }
 
 void Pcre2Base::setRegex(Php::Parameters &p)
@@ -99,19 +107,14 @@ Php::Value Pcre2Base::getRegex() const
 
 void Pcre2Base::__destruct()
 {
-	if (_match_data != NULL) {
-		pcre2_match_data_free(_match_data);
-		_match_data = NULL;
+	if (_mcontext != NULL) {
+		pcre2_match_context_free(_mcontext);
+		_mcontext = NULL;
 	}
 
 	if (_jit_stack != NULL) {
 		pcre2_jit_stack_free(_jit_stack);
 		_jit_stack = NULL;
-	}
-
-	if (_mcontext != NULL) {
-		pcre2_match_context_free(_mcontext);
-		_mcontext = NULL;
 	}
 
 	if (_regex_compiled != NULL) {
@@ -125,16 +128,7 @@ void Pcre2Base::__destruct()
 
 Pcre2Base::~Pcre2Base()
 {
-	if (_match_data != NULL)
-		pcre2_match_data_free(_match_data);
-
-	if (_jit_stack != NULL)
-		pcre2_jit_stack_free(_jit_stack);
-
-	if (_mcontext != NULL)
-		pcre2_match_context_free(_mcontext);
-
-	if (_regex_compiled != NULL) {
-		pcre2_code_free(_regex_compiled);
-	}
+	pcre2_match_context_free(_mcontext);
+	pcre2_jit_stack_free(_jit_stack);
+	pcre2_code_free(_regex_compiled);
 }

@@ -6,10 +6,6 @@
 
 class Matcher : public Pcre2Base
 {
-protected:
-
-	int32_t _basicMatch(Php::Parameters &) const;
-
 public:
 		Matcher() : Pcre2Base() {};
 		

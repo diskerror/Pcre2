@@ -1,5 +1,6 @@
 
 #include "Replacer.h"
+#include "MatchData.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void Replacer::__construct(Php::Parameters &p)
@@ -37,13 +38,15 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 	PCRE2_SIZE bufferSize = (subjectLen < 2048) ? 4096 : (subjectLen * 1.3);
 	PCRE2_UCHAR outputBuffer[bufferSize];
 
+	MatchData match_data(_regex_compiled);
+
 	int res = pcre2_substitute(
 		_regex_compiled,
 		(const PCRE2_UCHAR *) (const char *) p[0].buffer(),    //	subject,
 		PCRE2_ZERO_TERMINATED,
 		(PCRE2_SIZE)(p.size() > 1 ? p[1].numericValue() : 0),    //	offset
-		(uint32_t) (matchFlags & 0x00000000FFFFFFFF),    //	options
-		_match_data,
+		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),    //	options
+		match_data(),
 		_mcontext,        //	match context
 		(PCRE2_SPTR) _replacement.c_str(),
 		PCRE2_ZERO_TERMINATED,
@@ -51,8 +54,11 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 		&bufferSize
 	);
 
-	if (res < PCRE2_ERROR_NOMATCH)
-		handleNumericError(res);
+	if (res < PCRE2_ERROR_NOMATCH) {
+		PCRE2_UCHAR eMessage[256];
+		pcre2_get_error_message(res, eMessage, sizeof(eMessage));
+		throw Php::Exception((const char *) eMessage);
+	}
 
 	return Php::Value((const char *) outputBuffer, (int) bufferSize);
 }

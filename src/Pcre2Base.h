@@ -11,7 +11,6 @@ class Pcre2Base : public Php::Base
 protected:
 	std::string         _regex_string;
 	pcre2_code          *_regex_compiled;
-	pcre2_match_data    *_match_data;
 	pcre2_match_context *_mcontext;
 	pcre2_jit_stack     *_jit_stack;
 
@@ -36,16 +35,6 @@ public:
 	void __destruct();
 	~Pcre2Base();
 
-
-	static void handleNumericError(int32_t err)
-	{
-		const uint32_t messgLen = 1024;
-		PCRE2_UCHAR8 message[messgLen];
-
-		pcre2_get_error_message(err, message, messgLen);
-
-		throw Php::Exception((const char *) message);
-	}
 };
 
 #endif    //	DISKERROR_PCRE2_BASE_H
