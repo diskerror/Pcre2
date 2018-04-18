@@ -10,29 +10,29 @@ In PHP, the PCRE function:
 ```
 $subject = 'abacadabra';
 $result = preg_replace('/a/u', ' ', $subject);
-$this->assertEquals($result, ' b c d br ');
+$this->assertEquals(' b c d br ', $result);
 
 $result = (bool)preg_match('/a/u', $subject);
 $this->assertTrue($result);
 
 $matches = [];
 $result = preg_match('/a/u', $subject, $matches);  //  1
-$this->assertEquals($matches, ['a']);
+$this->assertEquals(['a'], $matches);
 ```
 Is equivalent to:
 ```
 //  UTF is the default
 $subject = 'abacadabra';
-$replacer = new \Diskerror\Pcre2\Replacer('a', ' ');
+$replacer = new Diskerror\Pcre2\Replacer('a', ' ');
 $result = $replacer->replace($subject);
-$this->assertEquals($result, ' b c d br ');
+$this->assertEquals(' b c d br ', $result);
 
-$matcher = new \Diskerror\Pcre2\Matcher('a');
+$matcher = new Diskerror\Pcre2\Matcher('a');
 $result = $matcher->hasMatch($subject);
 $this->assertTrue($result);
 
 $matches = $matcher->match($subject);  //  "$matcher" from above
-$this->assertEquals($matches, ['a']);
+$this->assertEquals(['a'], $matches);
 ```
 This will perform replacements on multiple strings with only one compile step, and without needing them to be gathered into a single array.
 
