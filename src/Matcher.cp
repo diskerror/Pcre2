@@ -1,17 +1,12 @@
 
 #include "Matcher.h"
 #include "MatchData.h"
+#include <ostream>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 Php::Value Matcher::hasMatch(Php::Parameters &p) const
 {
-	int32_t offset = 0;
-	if (p.size() > 1) {
-		offset = p[1];
-		if (offset < 0) {
-			offset = 0;
-		}
-	}
+	PCRE2_SIZE offset = (p.size() > 1 && p[1].numericValue() > 0) ? p[1].numericValue() : 0;
 
 	MatchData match_data(_regex_compiled);
 
@@ -43,14 +38,7 @@ Php::Value Matcher::hasMatch(Php::Parameters &p) const
 Php::Value Matcher::match(Php::Parameters &p) const
 {
 	const char *subject = (const char *) p[0].stringValue().c_str();
-
-	int32_t offset = 0;
-	if (p.size() > 1) {
-		offset = p[1];
-		if (offset < 0) {
-			offset = 0;
-		}
-	}
+	PCRE2_SIZE offset = (p.size() > 1 && p[1].numericValue() > 0) ? p[1].numericValue() : 0;
 
 	MatchData match_data(_regex_compiled);
 
@@ -58,7 +46,7 @@ Php::Value Matcher::match(Php::Parameters &p) const
 	int32_t matchCount = pcre2_match(
 		_regex_compiled,
 		(const PCRE2_UCHAR *) subject,
-		PCRE2_ZERO_TERMINATED,
+		(PCRE2_SIZE) p[0].stringValue().size(),
 		offset,
 		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),
 		match_data(),
@@ -88,18 +76,17 @@ Php::Value Matcher::match(Php::Parameters &p) const
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 Php::Value Matcher::matchAll(Php::Parameters &p) const
 {
-	const char *subject = (const char *) p[0].stringValue().c_str();
-	uint32_t subjectLength = p[0].stringValue().size();
-	uint32_t offset = (p.size() > 1 && p[1].numericValue() > 0) ? p[1].numericValue() : 0;
+	std::string subject = p[0].stringValue();
+	PCRE2_SIZE subjectLength = subject.size();
+	PCRE2_SIZE offset = (p.size() > 1 && p[1].numericValue() > 0) ? p[1].numericValue() : 0;
 
 	MatchData match_data(_regex_compiled);
-	std::vector<std::vector<std::string>> output;
 
 	//	Do first match.
 	int32_t matchCount = pcre2_match(
 		_regex_compiled,
-		(const PCRE2_UCHAR *) subject,
-		PCRE2_ZERO_TERMINATED,
+		(const PCRE2_UCHAR *) subject.c_str(),
+		subjectLength,
 		offset,
 		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),
 		match_data(),
@@ -111,6 +98,8 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 		pcre2_get_error_message(matchCount, eMessage, sizeof(eMessage));
 		throw Php::Exception((const char *) eMessage);
 	}
+
+	std::vector<std::vector<std::string>> output;
 
 	if (matchCount == PCRE2_ERROR_NOMATCH) {
 		return output;    //	empty array
@@ -124,7 +113,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 	std::vector<std::string> firstOutput;
 	for (PCRE2_SIZE i = 0; i < (PCRE2_SIZE) matchCount; i++) {
 		firstOutput.emplace_back(
-			(const char *) (subject + ovector[2 * i]),
+			(const char *) (subject.c_str() + ovector[2 * i]),
 			(size_t)(ovector[2 * i + 1] - ovector[2 * i])
 		);
 	}
@@ -139,7 +128,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 	for (;;) {
 		////////////////////////////////////////////////////////////////////////////////////////////
 		//  from pcre2demo.c, line 342
-		uint32_t options = matchFlags & 0x00000000FFFFFFFF;
+		uint32_t options = 0;
 		offset = ovector[1];   // Start at end of previous match
 
 		if (ovector[0] == ovector[1]) {
@@ -152,17 +141,17 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 			if (offset <= startchar) {
 				if (startchar >= subjectLength) break;  /* Reached end of subject.   */
 				offset = startchar + 1;                 /* Advance by one character. */
-				if (utf8) {   /* If UTF-8, it may be more than one code unit. */
+				if (utf8) { /* If UTF-8, it may be more than one code unit. */
 					for (; offset < subjectLength; offset++)
-						if ((subject[offset] & 0xc0) != 0x80) break;
+						if ((subject.c_str()[offset] & 0xc0) != 0x80) break;
 				}
 			}
 		}
 
 		int32_t matchCount = pcre2_match(
 			_regex_compiled,
-			(const PCRE2_UCHAR *) subject,
-			PCRE2_ZERO_TERMINATED,
+			(const PCRE2_UCHAR *) subject.c_str(),
+			subjectLength,
 			offset,
 			options,
 			match_data(),
@@ -170,26 +159,28 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 		);
 
 		if (matchCount < PCRE2_ERROR_NOMATCH) {
+			Php::out << std::dec << offset << std::endl;
+			Php::out << std::hex << subject << std::endl;
 			PCRE2_UCHAR eMessage[256];
 			pcre2_get_error_message(matchCount, eMessage, sizeof(eMessage));
 			throw Php::Exception((const char *) eMessage);
 		}
 
 		if (matchCount == PCRE2_ERROR_NOMATCH) {
-			if (options == (uint32_t)(matchFlags & 0x00000000FFFFFFFF))
+			if (options == 0)
 				break;                    /* All matches found */
 
 			ovector[1] = offset + 1;              /* Advance one code unit */
-			if (crlf_is_newline &&                      /* If CRLF is a newline & */
+			if (crlf_is_newline &&                /* If CRLF is a newline & */
 				offset < subjectLength - 1 &&    /* we are at CRLF, */
-				subject[offset] == '\r' &&
-				subject[offset + 1] == '\n')
+				subject.c_str()[offset] == '\r' &&
+				subject.c_str()[offset + 1] == '\n')
 				ovector[1] += 1;                       /* Advance by one more. */
 			else if (utf8)                              /* Otherwise, ensure we */
 			{                                         /* advance a whole UTF-8 */
 				while (ovector[1] < subjectLength)       /* character. */
 				{
-					if ((subject[ovector[1]] & 0xc0) != 0x80) break;
+					if ((subject.c_str()[ovector[1]] & 0xc0) != 0x80) break;
 					ovector[1] += 1;
 				}
 			}
@@ -200,7 +191,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 		PCRE2_SIZE i;
 		for (i = 0; i < (PCRE2_SIZE) matchCount; i++) {
 			loopOutput.emplace_back(
-				(const char *) (subject + ovector[2 * i]),
+				(const char *) (subject.c_str() + ovector[2 * i]),
 				(size_t)(ovector[2 * i + 1] - ovector[2 * i])
 			);
 		}

@@ -9,9 +9,9 @@ class Matcher : public Pcre2Base
 public:
 		Matcher() : Pcre2Base() {};
 		
-	virtual Php::Value	hasMatch(Php::Parameters &) const;
-	virtual Php::Value	match(Php::Parameters &) const;
-	virtual Php::Value	matchAll(Php::Parameters &) const;
+	Php::Value	hasMatch(Php::Parameters &) const;
+	Php::Value	match(Php::Parameters &) const;
+	Php::Value	matchAll(Php::Parameters &) const;
 
 };
 
