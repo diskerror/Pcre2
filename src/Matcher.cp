@@ -159,8 +159,6 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 		);
 
 		if (matchCount < PCRE2_ERROR_NOMATCH) {
-			Php::out << std::dec << offset << std::endl;
-			Php::out << std::hex << subject << std::endl;
 			PCRE2_UCHAR eMessage[256];
 			pcre2_get_error_message(matchCount, eMessage, sizeof(eMessage));
 			throw Php::Exception((const char *) eMessage);

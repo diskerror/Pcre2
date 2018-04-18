@@ -1,42 +1,43 @@
 # Pcre2
-This is a PHP extension that compiles a PCRE2 regular expression as separate step from the comparison step. Run time is faster than the builtin PCRE API for very large strings and multiple comparisons. It requires [PCRE2](http://www.pcre.org) and [PHP-CPP](http://www.php-cpp.com/) to be installed on the local system.
+This is a PHP extension that compiles a PCRE2 regular expression as separate step from the comparison step. Run time is only slightly faster than the builtin PCRE API for a single compile and match. This implimentation of PCRE2 shines when a regular expression is reused multiple times. It requires [PCRE2](http://www.pcre.org) and [PHP-CPP](http://www.php-cpp.com/) to be installed on the local system.
 
-The extension makefile has been tested on Debian 8 with PHP 5.6 and CentOS 6 with PHP 5.5.
+The extension makefile has been tested on Debian 8 with PHP 7.2, PCRE2 10.31, and PHP-CPP master branch of at least 2/9/18 which is required for PHP 7.2.
 
-This current version (0.2.1) has been updated to work with PHP-CPP version 2 and the makefile has been updated to work with many of the various PHP configuration paths.
-
-*Note:* passing arrays by reference doesn't work in version 2.0.0 of PHP-CPP;
+*Note:* passing PHP arrays by reference doesn't work in version 2.0.0 and later of PHP-CPP;
 
 ## Usage
 In PHP, the PCRE function:
 ```
 $subject = 'abacadabra';
-$result = preg_replace('/a/', ' ', $subject); //  ' b c d br '
+$result = preg_replace('/a/u', ' ', $subject);
+$this->assertEquals($result, ' b c d br ');
 
-$result = preg_match('/a/', $subject);  //  true
+$result = (bool)preg_match('/a/u', $subject);
+$this->assertTrue($result);
 
 $matches = [];
-$result = preg_match('/a/', $subject, $matches);  //  true
-print_r($matches);  //  ['a', 'a']
+$result = preg_match('/a/u', $subject, $matches);  //  1
+$this->assertEquals($matches, ['a']);
 ```
 Is equivalent to:
 ```
+//  UTF is the default
 $subject = 'abacadabra';
-$replace = new Diskerror\Pcre2\Replace('a', ' ');
-echo '"', $replace->hasMatch($subject), "\"\n";  //  " b c d br "
+$replacer = new \Diskerror\Pcre2\Replacer('a', ' ');
+$result = $replacer->replace($subject);
+$this->assertEquals($result, ' b c d br ');
 
-$hasMatch = new Diskerror\Pcre2\HasMatch('a');
-var_dump($hasMatch->match($subject));  //  bool(true)
+$matcher = new \Diskerror\Pcre2\Matcher('a');
+$result = $matcher->hasMatch($subject);
+$this->assertTrue($result);
 
-$matches = [];
-$match = new Diskerror\Pcre2\Match('a');
-$result = $match->replace($subject, $matches);
-print_r($matches);  //  Array([0] => a)
+$matches = $matcher->match($subject);  //  "$matcher" from above
+$this->assertEquals($matches, ['a']);
 ```
 This will perform replacements on multiple strings with only one compile step, and without needing them to be gathered into a single array.
 
 ## Requirements For Compiling
-GCC, Make, and the standard libraries are required to build and install the custom extension, as is the PHP development libraries.
+GCC, Make, and the standard libraries are required to build and install the custom extension, as is the PHP development library. You'll need to have experience with this.
 
 CentOS 6 requires at least devtoolset-2 to compile [PHP-CPP](http://www.php-cpp.com/).
 ```
@@ -55,12 +56,9 @@ The PCRE2 source can be found [here](http://www.pcre.org).
 ```
 
 ### PHP-CPP
-The Copernica [PHP-CPP](http://www.php-cpp.com/) library is used to build this extension.
+The Copernica [PHP-CPP on GitHub](https://github.com/CopernicaMarketingSoftware/PHP-CPP) library is used to build this extension.
 ```
  > make release
  > sudo make install
 ```
 Just using ```make``` will create a slower debug version.
-
-## Flags
-The Flags class is not used in the PCRE2 class as neither PHP-CPP nor Zephir can handle nested classes, where a class property is a class. The compiler and matcher flags have been exposed as integers.
