@@ -20,7 +20,6 @@ CPP	= $(COMPILER) $(COMPILER_FLAGS) -include precompile.hpp $< -o $@
 
 OBJECTS = \
 	obj/Pcre2Base.o \
-	obj/Flags.o \
 	obj/Replacer.o \
 	obj/Matcher.o \
 	obj/main.o
@@ -37,10 +36,6 @@ $(EXTENSION): obj/precompile.o $(OBJECTS)
 obj/precompile.o: precompile.hpp
 	mkdir -p obj
 	$(COMPILER) $(COMPILER_FLAGS) $< -o $@
-
-obj/Flags.o: src/flags/Base.cp src/flags/Base.h
-	$(CPP)
-
 
 obj/Pcre2Base.o: src/Pcre2Base.cp src/Pcre2Base.h src/flags/Base.h \
 		src/flags/Compile.h src/flags/Base.h src/flags/Match.h

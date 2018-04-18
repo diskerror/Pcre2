@@ -12,9 +12,6 @@ namespace Flags {
 class Match : public Base
 {
 public:
-//	Match() : Base()
-//	{ add(NOTEMPTY); }
-
 	static const int64_t NOTBOL = PCRE2_NOTBOL;    //	Subject string is not the beginning of a line
 	static const int64_t NOTEOL = PCRE2_NOTEOL;    //	Subject string is not the end of a line
 	static const int64_t NOTEMPTY = PCRE2_NOTEMPTY;    //	An empty string is not a valid match

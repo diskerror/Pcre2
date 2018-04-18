@@ -95,37 +95,6 @@ PHPCPP_EXPORT void *get_module()
 	////////////////////////////////////////////////////////////////////////////
 	Php::Class<Flags::Base> baseFlags("Diskerror\\Pcre2\\Flags\\FlagsAbstract", Php::Abstract);
 
-	//  Neither PHP-CPP nor Zephir can do nested classes. Damn.
-	baseFlags.method<&Flags::Base::__construct>("__construct", {
-		Php::ByVal("flags", Php::Type::Numeric, false)
-	});
-
-	baseFlags.method<&Flags::Base::add>("add", {
-		Php::ByVal("flag", Php::Type::Numeric, true)
-	});
-
-	baseFlags.method<&Flags::Base::remove>("remove", {
-		Php::ByVal("whichFlag", Php::Type::Numeric, true)
-	});
-
-	baseFlags.method<&Flags::Base::clear>("clear");
-
-	baseFlags.method<&Flags::Base::set>("set", {
-		Php::ByVal("flags", Php::Type::Numeric, true)
-	});
-
-	baseFlags.method<&Flags::Base::hasFlag>("hasFlag", {
-		Php::ByVal("whichFlag", Php::Type::Numeric, false)
-	});
-
-	baseFlags.method<&Flags::Base::get>("get", {
-		Php::ByVal("flags", Php::Type::Numeric, false)
-	});
-
-	baseFlags.method<&Flags::Base::getChanged>("getChanged");
-
-	baseFlags.method<&Flags::Base::clearChanged>("clearChanged");
-
 	baseFlags.property("ENDANCHORED", Flags::Base::ENDANCHORED, Php::Const);
 	baseFlags.property("NO_UTF_CHECK", Flags::Base::NO_UTF_CHECK, Php::Const);
 	baseFlags.property("ANCHORED", Flags::Base::ANCHORED, Php::Const);

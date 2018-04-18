@@ -12,9 +12,6 @@ namespace Flags {
 class Replace : public Match
 {
 public:
-//	Replace() : Match()
-//	{ add(GLOBAL); }
-
 	//	Additional options available to replace method.
 	static const int64_t GLOBAL = PCRE2_SUBSTITUTE_GLOBAL;  //	Replace all occurrences in the subject
 	static const int64_t EXTENDED = PCRE2_SUBSTITUTE_EXTENDED;  //	Do extended replacement processing
