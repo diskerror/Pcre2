@@ -7,13 +7,13 @@
 class Matcher : public Pcre2Base
 {
 public:
-		Matcher() : Pcre2Base() {};
-		
-	Php::Value	hasMatch(Php::Parameters &) const;
-	Php::Value	match(Php::Parameters &) const;
-	Php::Value	matchAll(Php::Parameters &) const;
+	explicit Matcher() : Pcre2Base() {};
 
-	Php::Value	test(Php::Parameters &) const;
+	Php::Value hasMatch(Php::Parameters &) const;
+	Php::Value match(Php::Parameters &) const;
+	Php::Value matchAll(Php::Parameters &) const;
+
+	Php::Value test(Php::Parameters &) const;
 };
 
-#endif	//	DISKERROR_PCRE2_MATCHER_H
+#endif    //	DISKERROR_PCRE2_MATCHER_H

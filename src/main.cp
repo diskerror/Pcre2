@@ -1,5 +1,6 @@
 
-#include "flags/Base.h"
+#include "flags/Compile.h"
+#include "flags/Replace.h"
 #include "Pcre2Base.h"
 #include "Matcher.h"
 #include "Replacer.h"
@@ -10,7 +11,7 @@ PHPCPP_EXPORT void *get_module()
 {
 	// static, Php::Extension object that should stay in memory
 	// for the entire duration of the process
-	static Php::Extension extension("diskerror_pcre2", "0.2");
+	static Php::Extension extension(EXT_NAME, "0.3");
 
 	////////////////////////////////////////////////////////////////////////////
 	Php::Class<Pcre2Base> pcre2abstract("Diskerror\\Pcre2\\Pcre2Abstract", Php::Abstract);
@@ -161,17 +162,17 @@ PHPCPP_EXPORT void *get_module()
 	////////////////////////////////////////////////////////////////////////////
 	//  Default compile and match flags (replace also uses match flags)
 	//  These defaults for UTF were chosen since the standard for PHP is to always use UTF.
-	extension.add(Php::Ini("diskerror_pcre2.default_compile_flags", 0x40080000));   //  NO_UTF_CHECK, UTF
-	extension.add(Php::Ini("diskerror_pcre2.default_match_flags", 0x40000004));     //  NO_UTF_CHECK, NOTEMPTY
-	extension.add(Php::Ini("diskerror_pcre2.default_replace_flags", 0x40000104));   //  NO_UTF_CHECK, GLOBAL, NOTEMPTY
+	extension.add(Php::Ini(EXT_NAME ".default_compile_flags", 0x40080000));   //  NO_UTF_CHECK, UTF
+	extension.add(Php::Ini(EXT_NAME ".default_match_flags", 0x40000004));     //  NO_UTF_CHECK, NOTEMPTY
+	extension.add(Php::Ini(EXT_NAME ".default_replace_flags", 0x40000104));   //  NO_UTF_CHECK, GLOBAL, NOTEMPTY
 
 	//  JIT stack size: min in kilobytes, max in megabytes (applies only with JIT is used.
-	extension.add(Php::Ini("diskerror_pcre2.jit_stack_min", "32"));
-	extension.add(Php::Ini("diskerror_pcre2.jit_stack_max", "100"));
+	extension.add(Php::Ini(EXT_NAME ".jit_stack_min", "32"));
+	extension.add(Php::Ini(EXT_NAME ".jit_stack_max", "100"));
 
 	//  Cache settings. The directory is in the shared memory device.
-//	extension.add(Php::Ini("diskerror_pcre2.compile_cache", "0"));  //  0 == off, 1 == on
-//	extension.add(Php::Ini("diskerror_pcre2.jit_stack_min", "/dev/shm/diskerror_pcre2/"));
+//	extension.add(Php::Ini(EXT_NAME ".compile_cache", "0"));  //  0 == off, 1 == on
+//	extension.add(Php::Ini(EXT_NAME ".jit_stack_min", "/dev/shm/diskerror_pcre2/"));
 
 	//  Attach code to our extension.
 	extension.add(std::move(pcre2abstract));

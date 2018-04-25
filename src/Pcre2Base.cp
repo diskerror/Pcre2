@@ -1,5 +1,6 @@
 
 #include "Pcre2Base.h"
+#include "flags/Compile.h"
 
 Pcre2Base::Pcre2Base()
 {
@@ -17,12 +18,12 @@ void Pcre2Base::__construct(Php::Parameters &p)
 	if (p.size() > 1 && !p[1].isNull())
 		compileFlags |= p[1].numericValue();
 	else
-		compileFlags |= (int64_t) Php::ini_get("diskerror_pcre2.default_compile_flags").numericValue();
+		compileFlags |= (int64_t) Php::ini_get(EXT_NAME ".default_compile_flags").numericValue();
 
 	if (p.size() > 2 && !p[2].isNull())
 		matchFlags |= p[2].numericValue();
 	else
-		matchFlags |= (int64_t) Php::ini_get("diskerror_pcre2.default_match_flags").numericValue();
+		matchFlags |= (int64_t) Php::ini_get(EXT_NAME ".default_match_flags").numericValue();
 
 	if (p.size() > 0 && !p[0].isNull() && p[0] != "") {
 		p.resize(1);
@@ -81,8 +82,8 @@ void Pcre2Base::compile(Php::Parameters &p)
 		}
 
 		_jit_stack = pcre2_jit_stack_create(
-			(PCRE2_SIZE) Php::ini_get("diskerror_pcre2.jit_stack_min").numericValue() * 1024,
-			(PCRE2_SIZE) Php::ini_get("diskerror_pcre2.jit_stack_max").numericValue() * 1024 * 1024,
+			(PCRE2_SIZE) Php::ini_get(EXT_NAME ".jit_stack_min").numericValue() * 1024,
+			(PCRE2_SIZE) Php::ini_get(EXT_NAME ".jit_stack_max").numericValue() * 1024 * 1024,
 			NULL);
 
 		if (_jit_stack == NULL)

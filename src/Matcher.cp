@@ -1,5 +1,7 @@
 
 #include "Matcher.h"
+#include "flags/Match.h"
+#include "flags/Compile.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 Php::Value Matcher::hasMatch(Php::Parameters &p) const

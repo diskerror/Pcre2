@@ -3,14 +3,13 @@
 #define DISKERROR_PCRE2_REPLACER_H
 
 #include "Pcre2Base.h"
-#include "flags/Replace.h"
 
 class Replacer : public Pcre2Base
 {
 	std::string _replacement;
 
 public:
-	Replacer() : Pcre2Base()
+	explicit Replacer() : Pcre2Base()
 	{};
 
 	void __construct(Php::Parameters &);

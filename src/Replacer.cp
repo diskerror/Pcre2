@@ -9,7 +9,7 @@ void Replacer::__construct(Php::Parameters &p)
 	if (p.size() > 3 && !p[3].isNull())
 		matchFlags |= p[3].numericValue();
 	else
-		matchFlags |= (int64_t) Php::ini_get("diskerror_pcre2.default_replace_flags").numericValue();
+		matchFlags |= (int64_t) Php::ini_get(EXT_NAME ".default_replace_flags").numericValue();
 
 	if (p.size() > 1)
 		p.erase(p.begin() + 1);

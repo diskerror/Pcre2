@@ -2,10 +2,6 @@
 #ifndef DISKERROR_PCRE2_BASE_H
 #define DISKERROR_PCRE2_BASE_H
 
-#include "flags/Base.h"
-#include "flags/Compile.h"
-#include "flags/Match.h"
-
 class Pcre2Base : public Php::Base
 {
 protected:
@@ -16,7 +12,7 @@ protected:
 	pcre2_jit_stack *_jit_stack;
 
 public:
-	Pcre2Base();
+	explicit Pcre2Base();
 
 	int64_t compileFlags;
 	Php::Value getCompileFlags() const

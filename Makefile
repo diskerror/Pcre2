@@ -16,7 +16,7 @@ LDLIBS = \
 	-Wl,-rpath,/usr/local/lib \
 	-lpcre2-8
 
-CPP	= $(COMPILER) $(COMPILER_FLAGS) -include precompile.hpp $< -o $@
+CPP	= $(COMPILER) $(COMPILER_FLAGS) -DEXT_NAME=\"$(NAME)\" -include precompile.hpp $< -o $@
 
 OBJECTS = \
 	obj/Pcre2Base.o \
@@ -37,22 +37,18 @@ obj/precompile.o: precompile.hpp
 	mkdir -p obj
 	$(COMPILER) $(COMPILER_FLAGS) $< -o $@
 
-obj/Pcre2Base.o: src/Pcre2Base.cp src/Pcre2Base.h src/flags/Base.h \
-		src/flags/Compile.h src/flags/Base.h src/flags/Match.h
+obj/Pcre2Base.o: src/Pcre2Base.cp src/Pcre2Base.h src/flags/Compile.h src/flags/Base.h
 	$(CPP)
 
-obj/Replacer.o: src/Replacer.cp src/Replacer.h src/Pcre2Base.h \
-		src/flags/Base.h src/flags/Compile.h src/flags/Base.h src/flags/Match.h \
-		src/flags/Replace.h src/flags/Match.h
+obj/Replacer.o: src/Replacer.cp src/Replacer.h src/Pcre2Base.h
 	$(CPP)
 
-obj/Matcher.o: src/Matcher.cp src/Matcher.h src/Pcre2Base.h src/flags/Base.h \
-		src/flags/Compile.h src/flags/Base.h src/flags/Match.h
+obj/Matcher.o: src/Matcher.cp src/Matcher.h src/Pcre2Base.h src/flags/Match.h \
+ src/flags/Base.h src/flags/Compile.h
 	$(CPP)
 
-obj/main.o: src/main.cp src/flags/Base.h src/Pcre2Base.h src/flags/Compile.h \
-		src/flags/Base.h src/flags/Match.h src/Matcher.h src/Replacer.h \
-		src/flags/Replace.h src/flags/Match.h
+obj/main.o: src/main.cp src/flags/Compile.h src/flags/Base.h src/flags/Replace.h src/flags/Match.h \
+ src/Pcre2Base.h src/Matcher.h src/Replacer.h
 	$(CPP)
 
 
