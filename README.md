@@ -1,5 +1,5 @@
 # Pcre2
-This is a PHP extension that compiles a PCRE2 regular expression as separate step from the comparison step. Run time is only slightly faster than the builtin PCRE API for a single compile and match. This implimentation of PCRE2 shines when a regular expression is reused multiple times. It requires [PCRE2](http://www.pcre.org) and [PHP-CPP](http://www.php-cpp.com/) to be installed on the local system.
+This is an implimentation of the PCRE2 algorithm as a PHP extension. It compiles a regular expression as separate step from the comparison step. Run time is faster than the builtin PCRE API for a single compile and match. This implimentation of PCRE2 shines when a regular expression is reused multiple times. It requires [PCRE2](http://www.pcre.org) and [PHP-CPP](http://www.php-cpp.com/) to be installed on the local system.
 
 The extension makefile has been tested on Debian 8 with PHP 7.2, PCRE2 10.31, and PHP-CPP master branch of at least 2/9/18 which is required for PHP 7.2.
 
@@ -37,7 +37,7 @@ $this->assertEquals(['a'], $matches);
 This will perform replacements on multiple strings with only one compile step, and without needing them to be gathered into a single array.
 
 ## Requirements For Compiling
-GCC, Make, and the standard libraries are required to build and install the custom extension, as is the PHP development library. You'll need to have experience with this.
+GCC, Make, and the standard libraries are required to build and install the custom extension, as is the PHP development library.
 
 If you are updating from an earlier version of this code be aware that the INI file for this extension is overwritten. Any setting there will be lost.
 
@@ -64,3 +64,6 @@ The Copernica [PHP-CPP](https://github.com/CopernicaMarketingSoftware/PHP-CPP) l
  > sudo make install
 ```
 Just using ```make``` will create a slower debug version.
+
+# LICENSE
+This project has been changed to "unlicense". You are free to use it as you wish.
