@@ -38,7 +38,7 @@ public:
 	static const int64_t USE_OFFSET_LIMIT = PCRE2_USE_OFFSET_LIMIT;    //	Enable offset limit for unanchored matching
 	static const int64_t EXTENDED_MORE = PCRE2_EXTENDED_MORE;
 	static const int64_t LITERAL = PCRE2_LITERAL;    //	Pattern characters are all literal
-	static const int64_t DO_JIT = 0x0000000100000000;    //	Do more optimizing with JIT compiler.
+	static const int64_t JIT = 0x0000000100000000;    //	Do more optimizing with JIT compiler.
 };
 
 }

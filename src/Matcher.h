@@ -13,6 +13,7 @@ public:
 	Php::Value	match(Php::Parameters &) const;
 	Php::Value	matchAll(Php::Parameters &) const;
 
+	Php::Value	test(Php::Parameters &) const;
 };
 
 #endif	//	DISKERROR_PCRE2_MATCHER_H

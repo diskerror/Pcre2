@@ -1,6 +1,5 @@
 
 #include "Replacer.h"
-#include "MatchData.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void Replacer::__construct(Php::Parameters &p)
@@ -10,7 +9,7 @@ void Replacer::__construct(Php::Parameters &p)
 	if (p.size() > 3 && !p[3].isNull())
 		matchFlags |= p[3].numericValue();
 	else
-		matchFlags |= Flags::Replace::GLOBAL;
+		matchFlags |= (int64_t) Php::ini_get("diskerror_pcre2.default_replace_flags").numericValue();
 
 	if (p.size() > 1)
 		p.erase(p.begin() + 1);
@@ -35,10 +34,8 @@ Php::Value Replacer::getReplacement() const
 Php::Value Replacer::replace(Php::Parameters &p) const
 {
 	PCRE2_SIZE subjectLen = p[0].size();
-	PCRE2_SIZE bufferSize = (subjectLen < 2048) ? 4096 : (subjectLen * 1.3);
+	PCRE2_SIZE bufferSize = (subjectLen < 3072) ? 4096 : (subjectLen * 1.3);
 	PCRE2_UCHAR outputBuffer[bufferSize];
-
-	MatchData match_data(_regex_compiled);
 
 	int res = pcre2_substitute(
 		_regex_compiled,
@@ -46,7 +43,7 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 		PCRE2_ZERO_TERMINATED,
 		(PCRE2_SIZE)(p.size() > 1 ? p[1].numericValue() : 0),    //	offset
 		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),    //	options
-		match_data(),
+		_match_data,
 		_mcontext,        //	match context
 		(PCRE2_SPTR) _replacement.c_str(),
 		PCRE2_ZERO_TERMINATED,

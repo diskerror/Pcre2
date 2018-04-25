@@ -7,8 +7,9 @@ try{
 $subject = 'abacadabra';
 
 $matcher = new Diskerror\Pcre2\Matcher('a');
-$res = $matcher->hasMatch($subject);
 var_dump($matcher->hasMatch($subject));  //  bool(true)
+
+// echo dechex($matcher->test()), "\n";
 
 $matches = $matcher->match($subject);
 print_r($matches);  //  Array([0] => a)

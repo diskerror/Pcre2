@@ -39,6 +39,8 @@ This will perform replacements on multiple strings with only one compile step, a
 ## Requirements For Compiling
 GCC, Make, and the standard libraries are required to build and install the custom extension, as is the PHP development library. You'll need to have experience with this.
 
+If you are updating from an earlier version of this code be aware that the INI file for this extension is overwritten. Any setting there will be lost.
+
 CentOS 6 requires at least devtoolset-2 to compile [PHP-CPP](http://www.php-cpp.com/).
 ```
  > cd /etc/yum.repos.d
@@ -56,7 +58,7 @@ The PCRE2 source can be found [here](http://www.pcre.org).
 ```
 
 ### PHP-CPP
-The Copernica [PHP-CPP on GitHub](https://github.com/CopernicaMarketingSoftware/PHP-CPP) library is used to build this extension.
+The Copernica [PHP-CPP](https://github.com/CopernicaMarketingSoftware/PHP-CPP) library is used to build this extension.
 ```
  > make release
  > sudo make install

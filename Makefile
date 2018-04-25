@@ -43,11 +43,11 @@ obj/Pcre2Base.o: src/Pcre2Base.cp src/Pcre2Base.h src/flags/Base.h \
 
 obj/Replacer.o: src/Replacer.cp src/Replacer.h src/Pcre2Base.h \
 		src/flags/Base.h src/flags/Compile.h src/flags/Base.h src/flags/Match.h \
-		src/flags/Replace.h src/flags/Match.h src/MatchData.h
+		src/flags/Replace.h src/flags/Match.h
 	$(CPP)
 
 obj/Matcher.o: src/Matcher.cp src/Matcher.h src/Pcre2Base.h src/flags/Base.h \
-		src/flags/Compile.h src/flags/Base.h src/flags/Match.h src/MatchData.h
+		src/flags/Compile.h src/flags/Base.h src/flags/Match.h
 	$(CPP)
 
 obj/main.o: src/main.cp src/flags/Base.h src/Pcre2Base.h src/flags/Compile.h \
@@ -62,6 +62,7 @@ install: $(EXTENSION)
 	chmod 644 $(EXTENSION_DIR)/$(EXTENSION)
 	if [ -d $(INI_PATH)/mods-available/ ]; then \
 		echo "extension = "$(EXTENSION) > $(INI_PATH)/mods-available/$(INI); \
+		cat ini_defaults.txt >> $(INI_PATH)/mods-available/$(INI); \
 		chmod 644 $(INI_PATH)/mods-available/$(INI); \
 		if [ -d $(INI_PATH)/apache2/conf.d/ ]; then \
 			ln -sf $(INI_PATH)/mods-available/$(INI) $(INI_PATH)/apache2/conf.d/; \

@@ -1,3 +1,6 @@
 *.o
 *.so
 obj
+.idea
+.DS_Store
+

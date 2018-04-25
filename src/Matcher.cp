@@ -1,14 +1,10 @@
 
 #include "Matcher.h"
-#include "MatchData.h"
-#include <ostream>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 Php::Value Matcher::hasMatch(Php::Parameters &p) const
 {
 	PCRE2_SIZE offset = (p.size() > 1 && p[1].numericValue() > 0) ? p[1].numericValue() : 0;
-
-	MatchData match_data(_regex_compiled);
 
 	//	do match
 	int32_t matchCount = pcre2_match(
@@ -17,7 +13,7 @@ Php::Value Matcher::hasMatch(Php::Parameters &p) const
 		PCRE2_ZERO_TERMINATED,
 		offset,
 		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),
-		match_data(),
+		_match_data,
 		_mcontext
 	);
 
@@ -40,8 +36,6 @@ Php::Value Matcher::match(Php::Parameters &p) const
 	const char *subject = (const char *) p[0].stringValue().c_str();
 	PCRE2_SIZE offset = (p.size() > 1 && p[1].numericValue() > 0) ? p[1].numericValue() : 0;
 
-	MatchData match_data(_regex_compiled);
-
 	//	do match
 	int32_t matchCount = pcre2_match(
 		_regex_compiled,
@@ -49,7 +43,7 @@ Php::Value Matcher::match(Php::Parameters &p) const
 		(PCRE2_SIZE) p[0].stringValue().size(),
 		offset,
 		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),
-		match_data(),
+		_match_data,
 		_mcontext
 	);
 
@@ -65,7 +59,7 @@ Php::Value Matcher::match(Php::Parameters &p) const
 		return output;    //	empty array
 	}
 
-	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(match_data());
+	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(_match_data);
 	for (int32_t i = 0; i < matchCount; i++) {
 		output.emplace_back((const char *) (subject + ovector[2 * i]), (size_t)(ovector[2 * i + 1] - ovector[2 * i]));
 	}
@@ -80,8 +74,6 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 	PCRE2_SIZE subjectLength = subject.size();
 	PCRE2_SIZE offset = (p.size() > 1 && p[1].numericValue() > 0) ? p[1].numericValue() : 0;
 
-	MatchData match_data(_regex_compiled);
-
 	//	Do first match.
 	int32_t matchCount = pcre2_match(
 		_regex_compiled,
@@ -89,7 +81,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 		subjectLength,
 		offset,
 		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),
-		match_data(),
+		_match_data,
 		_mcontext
 	);
 
@@ -105,7 +97,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 		return output;    //	empty array
 	}
 
-	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(match_data());
+	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(_match_data);
 
 	if (ovector[0] > ovector[1])
 		return output;
@@ -135,9 +127,8 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 			if (ovector[0] == subjectLength)
 				break;
 			options |= Flags::Match::NOTEMPTY_ATSTART | Flags::Match::ANCHORED;
-		}
-		else {
-			PCRE2_SIZE startchar = pcre2_get_startchar(match_data());
+		} else {
+			PCRE2_SIZE startchar = pcre2_get_startchar(_match_data);
 			if (offset <= startchar) {
 				if (startchar >= subjectLength) break;  /* Reached end of subject.   */
 				offset = startchar + 1;                 /* Advance by one character. */
@@ -154,7 +145,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 			subjectLength,
 			offset,
 			options,
-			match_data(),
+			_match_data,
 			_mcontext
 		);
 
@@ -198,4 +189,10 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 	}
 
 	return output;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+Php::Value Matcher::test(Php::Parameters &p) const
+{
+	return (int64_t) Php::ini_get("diskerror_pcre2.default_replace_flags");
 }

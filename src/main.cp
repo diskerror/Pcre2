@@ -35,6 +35,8 @@ PHPCPP_EXPORT void *get_module()
 
 	pcre2abstract.method<&Pcre2Base::getRegex>("getRegex");
 
+	pcre2abstract.method<whatAmI>("whatAmI");
+
 	pcre2abstract.property("compileFlags", &Pcre2Base::getCompileFlags, &Pcre2Base::setCompileFlags);
 	pcre2abstract.property("matchFlags", &Pcre2Base::getMatchFlags, &Pcre2Base::setMatchFlags);
 
@@ -131,7 +133,7 @@ PHPCPP_EXPORT void *get_module()
 	compileFlags.property("USE_OFFSET_LIMIT", Flags::Compile::USE_OFFSET_LIMIT, Php::Const);
 	compileFlags.property("EXTENDED_MORE", Flags::Compile::EXTENDED_MORE, Php::Const);
 	compileFlags.property("LITERAL", Flags::Compile::LITERAL, Php::Const);
-	compileFlags.property("DO_JIT", Flags::Compile::DO_JIT, Php::Const);
+	compileFlags.property("JIT", Flags::Compile::JIT, Php::Const);
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -157,6 +159,21 @@ PHPCPP_EXPORT void *get_module()
 
 
 	////////////////////////////////////////////////////////////////////////////
+	//  Default compile and match flags (replace also uses match flags)
+	//  These defaults for UTF were chosen since the standard for PHP is to always use UTF.
+	extension.add(Php::Ini("diskerror_pcre2.default_compile_flags", 0x40080000));   //  NO_UTF_CHECK, UTF
+	extension.add(Php::Ini("diskerror_pcre2.default_match_flags", 0x40000004));     //  NO_UTF_CHECK, NOTEMPTY
+	extension.add(Php::Ini("diskerror_pcre2.default_replace_flags", 0x40000104));   //  NO_UTF_CHECK, GLOBAL, NOTEMPTY
+
+	//  JIT stack size: min in kilobytes, max in megabytes (applies only with JIT is used.
+	extension.add(Php::Ini("diskerror_pcre2.jit_stack_min", "32"));
+	extension.add(Php::Ini("diskerror_pcre2.jit_stack_max", "100"));
+
+	//  Cache settings. The directory is in the shared memory device.
+//	extension.add(Php::Ini("diskerror_pcre2.compile_cache", "0"));  //  0 == off, 1 == on
+//	extension.add(Php::Ini("diskerror_pcre2.jit_stack_min", "/dev/shm/diskerror_pcre2/"));
+
+	//  Attach code to our extension.
 	extension.add(std::move(pcre2abstract));
 	extension.add(std::move(matcher));
 	extension.add(std::move(replacer));

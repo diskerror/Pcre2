@@ -17,14 +17,12 @@ void Pcre2Base::__construct(Php::Parameters &p)
 	if (p.size() > 1 && !p[1].isNull())
 		compileFlags |= p[1].numericValue();
 	else
-		compileFlags |= Flags::Compile::UTF;
+		compileFlags |= (int64_t) Php::ini_get("diskerror_pcre2.default_compile_flags").numericValue();
 
 	if (p.size() > 2 && !p[2].isNull())
 		matchFlags |= p[2].numericValue();
 	else
-		matchFlags |= Flags::Match::NOTEMPTY;
-
-	Php::Value self(this);
+		matchFlags |= (int64_t) Php::ini_get("diskerror_pcre2.default_match_flags").numericValue();
 
 	if (p.size() > 0 && !p[0].isNull() && p[0] != "") {
 		p.resize(1);
@@ -63,16 +61,18 @@ void Pcre2Base::compile(Php::Parameters &p)
 		pcre2_get_error_message(errorcode, eMessage, sizeof(eMessage));
 
 		char eOut[1024];
-		std::snprintf(eOut, sizeof(eOut), "PCRE2 compilation failed at offset %d: %s", (int)erroroffset, eMessage);
+		std::snprintf(eOut, sizeof(eOut), "PCRE2 compilation failed at offset %d: %s", (int) erroroffset, eMessage);
 		throw Php::Exception(eOut);
 	}
+
+	_match_data = pcre2_match_data_create_from_pattern(_regex_compiled, NULL);
 
 	_mcontext = pcre2_match_context_create(NULL);
 	if (_mcontext == NULL)
 		throw Php::Exception("match context returned null, could not obtain memory");
 
 	//  Apply JIT option
-	if (compileFlags & Flags::Compile::DO_JIT) {
+	if (compileFlags & Flags::Compile::JIT) {
 		int32_t jitError = pcre2_jit_compile(_regex_compiled, PCRE2_JIT_COMPLETE);
 		if (jitError) {
 			PCRE2_UCHAR eMessage[256];
@@ -80,7 +80,11 @@ void Pcre2Base::compile(Php::Parameters &p)
 			throw Php::Exception((const char *) eMessage);
 		}
 
-		_jit_stack = pcre2_jit_stack_create(32 * 1024, 1024 * 1024, NULL);
+		_jit_stack = pcre2_jit_stack_create(
+			(PCRE2_SIZE) Php::ini_get("diskerror_pcre2.jit_stack_min").numericValue() * 1024,
+			(PCRE2_SIZE) Php::ini_get("diskerror_pcre2.jit_stack_max").numericValue() * 1024 * 1024,
+			NULL);
+
 		if (_jit_stack == NULL)
 			throw Php::Exception("an error occurred when creating JIT stack");
 
@@ -117,6 +121,11 @@ void Pcre2Base::__destruct()
 		_jit_stack = NULL;
 	}
 
+	if (_match_data != NULL) {
+		pcre2_match_data_free(_match_data);
+		_match_data = NULL;
+	}
+
 	if (_regex_compiled != NULL) {
 		pcre2_code_free(_regex_compiled);
 		_regex_compiled = NULL;
@@ -130,5 +139,11 @@ Pcre2Base::~Pcre2Base()
 {
 	pcre2_match_context_free(_mcontext);
 	pcre2_jit_stack_free(_jit_stack);
+	pcre2_match_data_free(_match_data);
 	pcre2_code_free(_regex_compiled);
+}
+
+Php::Value whatAmI()
+{
+	return "extension";
 }
