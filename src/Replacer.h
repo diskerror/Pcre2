@@ -9,7 +9,7 @@ class Replacer : public Pcre2Base
 	std::string _replacement;
 
 public:
-	explicit Replacer() : Pcre2Base()
+	explicit Replacer() : Pcre2Base(), _replacement("")
 	{};
 
 	void __construct(Php::Parameters &);

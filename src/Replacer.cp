@@ -41,10 +41,10 @@ Php::Value Replacer::replace(Php::Parameters &p) const
 		_regex_compiled,
 		(const PCRE2_UCHAR *) (const char *) p[0].buffer(),    //	subject,
 		PCRE2_ZERO_TERMINATED,
-		(PCRE2_SIZE)(p.size() > 1 ? p[1].numericValue() : 0),    //	offset
-		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),    //	options
+		(PCRE2_SIZE)(p.size() > 1 ? p[1].numericValue() : 0),  //	offset
+		(uint32_t) matchFlags,                                 //	options
 		_match_data,
-		_mcontext,        //	match context
+		_mcontext,                                             //	match context
 		(PCRE2_SPTR) _replacement.c_str(),
 		PCRE2_ZERO_TERMINATED,
 		outputBuffer,

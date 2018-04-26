@@ -3,9 +3,10 @@
 #include "flags/Compile.h"
 
 Pcre2Base::Pcre2Base()
+	: _regex_string("")
 {
-	_regex_string = "";
 	_regex_compiled = NULL;
+	_match_data = NULL;
 	_mcontext = NULL;
 	_jit_stack = NULL;
 
@@ -51,7 +52,7 @@ void Pcre2Base::compile(Php::Parameters &p)
 	_regex_compiled = pcre2_compile(
 		(PCRE2_SPTR) _regex_string.c_str(),
 		PCRE2_ZERO_TERMINATED,
-		(uint32_t)(compileFlags & 0x00000000FFFFFFFF),
+		(uint32_t) compileFlags,
 		&errorcode,
 		&erroroffset,
 		NULL    //	match context

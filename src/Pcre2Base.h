@@ -15,23 +15,23 @@ public:
 	explicit Pcre2Base();
 
 	int64_t compileFlags;
-	Php::Value getCompileFlags() const
+	inline Php::Value getCompileFlags() const
 	{ return compileFlags; }
-	void setCompileFlags(const Php::Value &v)
+	inline void setCompileFlags(const Php::Value &v)
 	{ compileFlags = v.numericValue(); }    // test for error?
 
 	int64_t matchFlags;
-	Php::Value getMatchFlags() const
+	inline Php::Value getMatchFlags() const
 	{ return matchFlags; }
-	void setMatchFlags(const Php::Value &v)
+	inline void setMatchFlags(const Php::Value &v)
 	{ matchFlags = v.numericValue(); }    // test for error?
 
 	void __construct(Php::Parameters &);
 
 	void compile(Php::Parameters &);
 
-	void setRegex(Php::Parameters &);
-	Php::Value getRegex() const;
+	inline void setRegex(Php::Parameters &);
+	inline Php::Value getRegex() const;
 
 	void __destruct();
 	~Pcre2Base();

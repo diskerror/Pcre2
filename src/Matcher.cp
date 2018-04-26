@@ -14,7 +14,7 @@ Php::Value Matcher::hasMatch(Php::Parameters &p) const
 		(const PCRE2_UCHAR *) p[0].stringValue().c_str(),
 		PCRE2_ZERO_TERMINATED,
 		offset,
-		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),
+		(uint32_t) matchFlags,
 		_match_data,
 		_mcontext
 	);
@@ -44,7 +44,7 @@ Php::Value Matcher::match(Php::Parameters &p) const
 		(const PCRE2_UCHAR *) subject,
 		(PCRE2_SIZE) p[0].stringValue().size(),
 		offset,
-		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),
+		(uint32_t) matchFlags,
 		_match_data,
 		_mcontext
 	);
@@ -62,7 +62,7 @@ Php::Value Matcher::match(Php::Parameters &p) const
 	}
 
 	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(_match_data);
-	for (int32_t i = 0; i < matchCount; i++) {
+	for (int32_t i = 0; i < matchCount; ++i) {
 		output.emplace_back((const char *) (subject + ovector[2 * i]), (size_t)(ovector[2 * i + 1] - ovector[2 * i]));
 	}
 
@@ -82,7 +82,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 		(const PCRE2_UCHAR *) subject.c_str(),
 		subjectLength,
 		offset,
-		(uint32_t)(matchFlags & 0x00000000FFFFFFFF),
+		(uint32_t) matchFlags,
 		_match_data,
 		_mcontext
 	);
@@ -105,7 +105,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 		return output;
 
 	std::vector<std::string> firstOutput;
-	for (PCRE2_SIZE i = 0; i < (PCRE2_SIZE) matchCount; i++) {
+	for (PCRE2_SIZE i = 0; i < (PCRE2_SIZE) matchCount; ++i) {
 		firstOutput.emplace_back(
 			(const char *) (subject.c_str() + ovector[2 * i]),
 			(size_t)(ovector[2 * i + 1] - ovector[2 * i])
@@ -180,7 +180,7 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 
 		std::vector<std::string> loopOutput;    //  erases previous
 		PCRE2_SIZE i;
-		for (i = 0; i < (PCRE2_SIZE) matchCount; i++) {
+		for (i = 0; i < (PCRE2_SIZE) matchCount; ++i) {
 			loopOutput.emplace_back(
 				(const char *) (subject.c_str() + ovector[2 * i]),
 				(size_t)(ovector[2 * i + 1] - ovector[2 * i])
@@ -196,5 +196,5 @@ Php::Value Matcher::matchAll(Php::Parameters &p) const
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 Php::Value Matcher::test(Php::Parameters &p) const
 {
-	return (int64_t) Php::ini_get("diskerror_pcre2.default_replace_flags");
+	return (int32_t) (uint32_t) Flags::Compile::JIT;
 }

@@ -62,6 +62,8 @@ PHPCPP_EXPORT void *get_module()
 		Php::ByVal("offset", Php::Type::Numeric, false)
 	});
 
+	matcher.method<&Matcher::test>("test");
+
 	matcher.property("compileFlags", &Matcher::getCompileFlags, &Matcher::setCompileFlags);
 	matcher.property("matchFlags", &Matcher::getMatchFlags, &Matcher::setMatchFlags);
 
