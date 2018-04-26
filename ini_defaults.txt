@@ -1,8 +1,0 @@
-
-# diskerror_pcre2.default_compile_flags = 0x40080000
-# diskerror_pcre2.default_match_flags = 0x40000004
-# diskerror_pcre2.default_replace_flags = 0x40000104
-# diskerror_pcre2.jit_stack_min = 32
-# diskerror_pcre2.jit_stack_max = 100
-# diskerror_pcre2.compile_cache = 0
-# diskerror_pcre2.jit_stack_min = "/dev/shm/diskerror_pcre2/"
